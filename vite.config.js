@@ -2,14 +2,21 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import path from "path";
 
-//
-// Vite configuration for the MP3jam Vue project.
-//
-// This configuration enables the Vue plugin and sets up a path alias
-// so that "@" resolves to the `src` directory. It also enables Less
-// support by allowing inline JavaScript in Less files.
+// element plus 自动导入
+import Components from "unplugin-vue-components/vite";
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import AutoImport from "unplugin-auto-import/vite";
+
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+    }),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
