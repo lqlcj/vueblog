@@ -1,9 +1,5 @@
 <template>
-  <!--
-    Site footer with descriptive text, policy links and social media
-    buttons.  Links are left untouched but open in a new tab to
-    preserve the SPA state.
-  -->
+
   <footer class="footer">
     <div class="text">
       <p>
