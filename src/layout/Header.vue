@@ -9,6 +9,9 @@
 
     <!-- 导航 -->
     <nav class="menu">
+      <router-link to="/" class="nav-link" active-class="select">
+        Welcome
+      </router-link>
       <router-link to="/Home" class="nav-link" active-class="select">
         Home
       </router-link>

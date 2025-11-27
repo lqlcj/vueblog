@@ -1,34 +1,30 @@
 <template>
+  <footer class="footer-container">
+    <div class="footer-content">
 
-  <footer class="footer">
-    <div class="text">
-      <p>
-        欢迎
-        <a href="https://www.mp3jam.org/dmca.html" target="_blank">Report Copyrighted</a>
-      </p>
+      <div class="left-section">
+        <p class="welcome-text">
+          欢迎 <a href="https://www.mp3jam.org/dmca.html" target="_blank" class="highlight-link">Report Copyrighted</a>
+        </p>
 
-      <!-- 友情链接 -->
-      <div class="link">
-        <a href="#" target="_blank">Privacy policy</a>
-        <a style="margin-left: 30px;" href="#" target="_blank">Refund policy</a>
-        <a style="margin-left: 30px;" href="#" target="_blank">Contact</a>
-        <a style="margin-left: 30px;" href="#" target="_blank">etc</a>
+        <div class="links-row">
+          <a href="#" target="_blank">Privacy policy</a>
+          <a href="#" target="_blank">Refund policy</a>
+          <a href="#" target="_blank">Contact</a>
+          <a href="#" target="_blank">etc</a>
+        </div>
       </div>
+
+      <div class="right-section">
+        <div class="social-row">
+          <a href="#" target="_blank" class="social-btn facebook">FACEBOOK</a>
+          <a href="#" target="_blank" class="social-btn twitter">TWITTER</a>
+        </div>
+
+        <span class="copyright">LCJ.ORG.2019</span>
+      </div>
+
     </div>
-
-    <!-- 社交媒体 -->
-    <div class="social">
-      <div class="facebook">
-        <a href="#" target="_blank">FACEBOOK</a>
-      </div>
-      <!-- Remove inline float on twitter button; layout is handled via flex in the global stylesheet -->
-      <div class="twitter">
-        <a href="#" target="_blank">TWITTER</a>
-      </div>
-    </div>
-
-    <!-- 酷酷 -->
-    <span class="url">LCJ.ORG.2019</span>
   </footer>
 </template>
 
@@ -40,90 +36,142 @@
 
 <style scoped>
 
-  .footer {
-    /*border: 1px solid red;*/
+  /* --- 容器基础设置 --- */
+  .footer-container {
+    width: 100%;
+    padding: 45px 20px 60px;
+    /* 上 左右 下 */
+    background-color: transparent;
+    /* 如果有背景色可以在这里加 */
+  }
+
+  /* 限制最大宽度的内容框，居中显示 */
+  .footer-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    /* 左右两端对齐 */
+    align-items: flex-end;
+    /* 底部对齐 */
+    flex-wrap: wrap;
+    /* 允许换行，防止挤压 */
+    gap: 40px;
+    /* 左右两块之间的间距 */
+  }
+
+  /* --- 左侧区域 --- */
+  .left-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* 文字和链接行之间的间距 */
+    text-align: left;
+  }
+
+  .welcome-text {
+    font-family: 'Conv_FuturaStd-Medium', Arial, sans-serif;
+    font-size: 14px;
+    /* 10pt ≈ 13-14px */
+    line-height: 1.6;
+    color: #68525B;
+    margin: 0;
+  }
+
+  .highlight-link {
+    color: #68525B;
+    text-decoration: underline;
+  }
+
+  .links-row {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 79%;
-    margin-right: 100px;
-    margin-left: 100px;
-    margin-top: 45px;
-    height: auto;
-    position: relative;
+    gap: 30px;
+    /* 替代原来的 style="margin-left: 30px" */
   }
 
-  /* 欢迎 */
-  .footer .text {
-    /*border: 1px solid green;*/
-    text-align: left;
-    flex: 1 1 auto;
-    /* relative positioning so that .link can remain absolutely positioned inside */
-    position: relative;
-    padding-left: 5px;
-    font-family: 'Conv_FuturaStd-Medium', Arial;
-    font-size: 10pt;
-    line-height: 16pt;
+  .links-row a {
+    font-family: 'Conv_FuturaStd-Medium', Arial, sans-serif;
+    font-size: 14px;
     color: #68525B;
+    text-decoration: none;
+    transition: color 0.3s;
   }
 
-  /* 欢迎后面跟的a */
-  .footer .text a {
-    color: #68525B;
+  .links-row a:hover {
+    color: #D94851;
+    /* 增加一点交互反馈 */
   }
 
-  /* 友情链接 */
-  .footer .text .link {
-    position: absolute;
-    left: 4px;
-    bottom: -24px;
-  }
-
-  /* 社交媒体 */
-  .footer .social {
-    /*border: 1px solid blue;*/
+  /* --- 右侧区域 --- */
+  .right-section {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-end;
+    /* 靠右对齐 */
+    gap: 15px;
+  }
+
+  /* 社交媒体行 */
+  .social-row {
+    display: flex;
     gap: 10px;
-    flex-shrink: 0;
-    position: static;
   }
 
-  .footer .social div {
+  .social-btn {
+    display: inline-block;
     height: 27px;
-    /*border: 1px solid orange;*/
+    line-height: 27px;
+    /* 垂直居中 */
     background-color: #4FBBCC;
-    text-align: right;
-    /* reset margin since flex handles spacing */
-    margin-top: 0;
-  }
-
-  .footer .social a {
-    font-family: 'Conv_FuturaStd-Book', Arial;
-    font-size: 10pt;
     color: #FFFFFF;
-    padding-right: 5px;
-    padding-left: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    font-family: 'Conv_FuturaStd-Book', Arial, sans-serif;
+    font-size: 13px;
+    padding: 0 10px;
     letter-spacing: 2px;
     text-decoration: none;
+    transition: background-color 0.3s;
   }
 
-  /* 社交媒体悬停 */
-  .footer .social div:hover {
+  .social-btn:hover {
     background-color: #D94851;
   }
 
-  /* 最后酷酷 */
-  .footer .url {
-    align-self: flex-end;
-    margin-top: 10px;
-    font-family: 'Conv_FuturaStd-Medium', Arial;
-    font-size: 10pt;
+  /* 版权号 */
+  .copyright {
+    font-family: 'Conv_FuturaStd-Medium', Arial, sans-serif;
+    font-size: 14px;
     color: #68525B;
     letter-spacing: 2px;
   }
 
+  /* --- 📱 手机端适配 (Media Query) --- */
+  @media (max-width: 768px) {
+    .footer-content {
+      flex-direction: column;
+      /* 改为垂直排列 */
+      align-items: center;
+      /* 整体居中 */
+      text-align: center;
+      gap: 30px;
+    }
+
+    .left-section {
+      align-items: center;
+      /* 左侧文字居中 */
+      text-align: center;
+    }
+
+    .links-row {
+      justify-content: center;
+      /* 链接居中 */
+      gap: 20px;
+      /* 手机上间距稍微小一点 */
+    }
+
+    .right-section {
+      align-items: center;
+      /* 右侧内容也居中 */
+    }
+  }
 </style>

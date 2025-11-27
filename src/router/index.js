@@ -10,7 +10,9 @@ const PostDetail = () => import("@/views/Blog/PostDetail.vue");
 const routes = [
   {
     path: "/",
-    redirect: "/home",
+    name: "Welcome",
+    // 1. 吉卜力风格欢迎页 (这是入口)
+    component: () => import("../views/Welcome/index.vue"),
   },
   {
     path: "/home",
@@ -39,6 +41,10 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    // 每次跳转都回到顶部
+    return { top: 0 };
+  },
 });
 
 export default router;
