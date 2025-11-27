@@ -3,7 +3,7 @@
     <!-- logo组件 -->
     <div class="logo">
       <router-link to="/Home">
-        <img alt="logo" src="/images/logo.png" />
+        <img alt="logo" src="../assets/images/logo.png" />
       </router-link>
     </div>
 

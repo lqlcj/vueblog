@@ -4,6 +4,11 @@
     <div class="container">
       <h1>Blog</h1>
       <p>This page is under construction. Check back later for updates.</p>
+
+      <div class="market">
+        市集
+      </div>
+
     </div>
 
   </div>

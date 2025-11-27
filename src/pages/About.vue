@@ -73,7 +73,7 @@
 <style>
 
   .wrapper {
-    background-image: url('../../public/images/About/figure_06.png');
+    background-image: url('../assets/images/About/figure_06.png');
   }
 
 
@@ -106,7 +106,7 @@
 
   .AboutFooter {
     height: 150px;
-    background-image: url('../../public/images/About/footer-bg.png');
+    background-image: url('../assets/images/About/footer-bg.png');
     border-radius: 16px 16px 0 0;
   }
 
