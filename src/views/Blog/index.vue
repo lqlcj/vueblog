@@ -46,66 +46,40 @@
 <script setup>
   import { ref, computed, onMounted, onUnmounted } from 'vue';
   import { useRouter } from 'vue-router';
-  import fm from 'front-matter'; // 引入 Markdown 解析库
+  // 1. 引入仓库
+  import { useBlogStore } from '@/stores/blogStore';
 
   const router = useRouter();
+  // 2. 初始化仓库
+  const blogStore = useBlogStore();
 
   // ==========================================
-  // 1. 配置
-  // ==========================================
-  const PAGE_SIZE = 12;
-  const STORAGE_KEY = 'xhs_likes_md';
-
-  // ==========================================
-  // 2. 自动读取 Markdown (核心逻辑修复)
+  // 1. 数据来源：直接从仓库拿
   // ==========================================
 
-  // 【修复点】：使用新的 Vite 语法读取文件
-  const mdFiles = import.meta.glob('/src/posts/*.md', {
-    query: '?raw',      //以此查询参数导入
-    import: 'default',  // 只导入默认导出（即文件内容字符串）
-    eager: true         // 立即读取，不懒加载
+  // 组件挂载时，通知仓库去进货
+  onMounted(() => {
+    blogStore.initPosts();
+
+    // 启动容器尺寸监听 (UI逻辑保留在组件内)
+    if (containerRef.value) {
+      resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          containerWidth.value = entry.contentRect.width;
+        }
+      });
+      resizeObserver.observe(containerRef.value);
+    }
   });
 
-  const loadPosts = () => {
-    const posts = [];
-    let index = 0;
-
-    for (const path in mdFiles) {
-      const content = mdFiles[path];
-      try {
-        const parsed = fm(content); // 解析 Frontmatter
-        const attr = parsed.attributes;
-
-        posts.push({
-          id: index++,
-          title: attr.title || '无标题',
-          // 如果 md 里没写 cover，给个默认图
-          img: attr.cover || 'https://picsum.photos/400/300',
-          // 如果没写 ratio，默认 0.75 (3:4)
-          aspectRatio: attr.ratio || 0.75,
-          user: attr.user || '博主',
-          avatar: attr.avatar || 'https://api.dicebear.com/7.x/miniavs/svg?seed=admin',
-          likes: attr.likes || 0,
-          date: attr.date || '2025-01-01',
-          isLiked: false,
-          filePath: path // 记录文件路径
-        });
-      } catch (e) {
-        console.error('解析 Markdown 失败:', path, e);
-      }
-    }
-
-    // 按日期倒序（最新的在前面）
-    return posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-  };
-
-  // 数据源
-  const allData = ref(loadPosts());
+  // 使用 computed 获取仓库里的数据，保持响应式
+  const allData = computed(() => blogStore.allPosts);
 
   // ==========================================
-  // 3. 智能容器侦测 (ResizeObserver)
+  // 2. UI 逻辑 (分页、列数计算、容器侦测)
+  //    这些属于纯界面展示逻辑，保留在组件里
   // ==========================================
+  const PAGE_SIZE = 12;
   const containerRef = ref(null);
   const containerWidth = ref(1000);
   const currentPage = ref(1);
@@ -119,32 +93,16 @@
   });
 
   const gapSize = computed(() => containerWidth.value < 500 ? 8 : 12);
-
   let resizeObserver = null;
-
-  onMounted(() => {
-    loadLikesFromStorage();
-
-    if (containerRef.value) {
-      resizeObserver = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          containerWidth.value = entry.contentRect.width;
-        }
-      });
-      resizeObserver.observe(containerRef.value);
-    }
-  });
 
   onUnmounted(() => {
     if (resizeObserver) resizeObserver.disconnect();
   });
 
-  // ==========================================
-  // 4. 分页与数据处理
-  // ==========================================
   const currentDisplayData = computed(() => {
     const start = (currentPage.value - 1) * PAGE_SIZE;
     const end = start + PAGE_SIZE;
+    // 注意：这里使用的是 computed 出来的 allData
     return allData.value.slice(start, end);
   });
 
@@ -159,24 +117,12 @@
   const totalPages = computed(() => Math.ceil(allData.value.length / PAGE_SIZE));
 
   // ==========================================
-  // 5. 交互
+  // 3. 交互逻辑
   // ==========================================
-  const loadLikesFromStorage = () => {
-    try {
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      allData.value.forEach(item => { if (stored[item.id]) item.isLiked = true; });
-    } catch (e) { }
-  };
 
+  // 点赞：现在只需要通知仓库 "把id为xxx的文章点个赞"
   const toggleLike = (item) => {
-    item.isLiked = !item.isLiked;
-    item.isLiked ? item.likes++ : item.likes--;
-    try {
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      if (item.isLiked) stored[item.id] = true;
-      else delete stored[item.id];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
-    } catch (e) { }
+    blogStore.toggleLike(item.id);
   };
 
   const changePage = (page) => {
@@ -186,9 +132,6 @@
   };
 
   const handleClick = (item) => {
-    // 使用 router.push 跳转
-    // path: 对应我们在 router/index.js 里配置的 path
-    // query: 传递参数，这里我们把文件的路径传过去
     router.push({
       path: '/post',
       query: { path: item.filePath }
@@ -200,9 +143,17 @@
 
   /* 容器 */
   .xhs-container {
+    /* 1. 宽度占满父容器，但在大屏上不要超过 1200px (和导航栏保持一致) */
     width: 100%;
+    max-width: 1100px;
+
+    /* 2. 【核心】上下间距0，左右自动(auto) -> 这就是居中的魔法 */
+    margin: 0 auto;
+
+    /* 3. 防止内容贴边 */
     box-sizing: border-box;
-    padding: 0;
+    padding: 20px 10px;
+    /* 上下给点空隙，左右留点白，更透气 */
   }
 
   /* 瀑布流 */
