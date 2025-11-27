@@ -3,7 +3,19 @@
     <div class="bg-shape shape-1"></div>
     <div class="bg-shape shape-2"></div>
 
+    <div class="note-wrapper">
+      <section class="intro-banner">
+        <div class="tape-left"></div>
+        <div class="tape-right"></div>
+        <div class="banner-content">
+          <h2 class="handwritten">Good Morning, Traveler.</h2>
+          <p>欢迎回到小屋。外面风大，进来喝杯茶吧。</p>
+        </div>
+      </section>
+    </div>
+
     <div class="main-container">
+
       <div class="profile-card glass-panel" ref="cardRef" :style="cardStyle" @mouseleave="resetCard">
         <div class="card-content">
           <div class="avatar-placeholder">👨‍💻</div>
@@ -38,20 +50,23 @@
           <div class="stat-label">Ideas Pending</div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
 
 <script setup>
+  // JS 部分保持不变
   import { ref, onMounted, computed } from 'vue'
 
-  // --- 打字机 & 3D视差逻辑 (直接复用之前的代码) ---
+  // --- 打字机逻辑 ---
   const fullText = "Building for the Web."
   const typedText = ref('')
   let charIndex = 0
   const typeWriter = () => { if (charIndex < fullText.length) { typedText.value += fullText.charAt(charIndex); charIndex++; setTimeout(typeWriter, 100); } }
   onMounted(() => { typeWriter() })
 
+  // --- 3D 视差逻辑 ---
   const mouseX = ref(0); const mouseY = ref(0);
   const handleMouseMove = (e) => {
     const w = window.innerWidth; const h = window.innerHeight;
@@ -62,23 +77,27 @@
 </script>
 
 <style scoped>
+  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
 
-  /* --- 复用之前的 Glassmorphism CSS --- */
+  /* --- 布局容器 --- */
   .dashboard-page {
-    min-height: 90vh;
+    min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
     position: relative;
-    overflow: hidden;
-    padding: 20px;
+    overflow-x: hidden;
+    gap: 60px;
+    /* 如果希望整个页面背景也有一个淡淡的底色，可以加上这行，不加也行，靠光斑撑起氛围 */
+    /* background: linear-gradient(to bottom right, #fdfbfb, #ebedee); */
   }
 
+  /* --- 背景光斑 (形状不变，只改颜色) --- */
   .bg-shape {
     position: absolute;
     filter: blur(80px);
-    /* 🔴 修改这里：从 -1 改成 0 */
-    /* 让它浮在 App 背景图上面，但不要沉底 */
     z-index: 0;
     opacity: 0.6;
     animation: float 10s infinite ease-in-out;
@@ -87,7 +106,9 @@
   .shape-1 {
     width: 300px;
     height: 300px;
-    background: #ff9a9e;
+    /* background: #ff9a9e; <-- 旧颜色 */
+    /* 🔴 新颜色：左上角用暖粉色渐变，模拟QQ音乐的暖调 */
+    background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
     top: 10%;
     left: 10%;
   }
@@ -95,7 +116,9 @@
   .shape-2 {
     width: 400px;
     height: 400px;
-    background: #a18cd1;
+    /* background: #a18cd1; <-- 旧颜色 */
+    /* 🔴 新颜色：右下角用柔和的紫/蓝渐变，增加层次感 */
+    background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
     bottom: 10%;
     right: 10%;
     animation-delay: -5s;
@@ -113,19 +136,91 @@
     }
   }
 
+  /* --- 黄色便签 (加大 & 居中版) --- */
+  .note-wrapper {
+    z-index: 20;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    animation: dropDown 0.8s ease-out;
+  }
+
+  @keyframes dropDown {
+    from {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .intro-banner {
+    background-color: #fff9c4;
+    padding: 30px 80px;
+    position: relative;
+    text-align: center;
+    transform: rotate(-2deg);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    max-width: 900px;
+    width: 90%;
+  }
+
+  .intro-banner:hover {
+    transform: rotate(0deg) scale(1.02);
+  }
+
+  .tape-left,
+  .tape-right {
+    position: absolute;
+    top: -15px;
+    width: 120px;
+    height: 35px;
+    background-color: rgba(220, 200, 150, 0.6);
+    backdrop-filter: blur(2px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .tape-left {
+    left: 20px;
+    transform: rotate(-3deg);
+  }
+
+  .tape-right {
+    right: 20px;
+    transform: rotate(4deg);
+  }
+
+  .banner-content h2 {
+    font-family: 'Caveat', cursive;
+    font-size: 3rem;
+    margin: 0 0 10px 0;
+    color: #5d4037;
+  }
+
+  .banner-content p {
+    font-family: sans-serif;
+    margin: 0;
+    color: #795548;
+    font-size: 1.2rem;
+  }
+
+  /* --- 3D 玻璃主容器 --- */
   .main-container {
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
+    grid-template-columns: 0.9fr 1fr;
     gap: 40px;
     max-width: 1000px;
     width: 100%;
-    /* 🔴 修改这里：确保内容层比光斑高 */
-    /* 之前是 1，改成 10 更保险，防止被光斑挡住 */
     z-index: 10;
     position: relative;
-    /* 确保 z-index 生效 */
+    padding: 0 20px;
   }
 
+  /* 玻璃态通用 */
   .glass-panel {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(20px);
@@ -134,8 +229,9 @@
     box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
   }
 
+  /* --- 左侧卡片 (Creator) - 调小 --- */
   .profile-card {
-    padding: 60px 40px;
+    padding: 40px 30px;
     transition: transform 0.1s ease-out;
     display: flex;
     flex-direction: column;
@@ -143,54 +239,49 @@
   }
 
   .avatar-placeholder {
-    font-size: 4rem;
-    margin-bottom: 20px;
+    font-size: 3rem;
+    margin-bottom: 15px;
   }
 
   .name {
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     font-weight: 900;
     margin: 0;
     color: #2c3e50;
     line-height: 1.1;
-    letter-spacing: -2px;
+    letter-spacing: -1px;
   }
 
   .role-text {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: #666;
-    margin: 10px 0 30px;
+    margin: 10px 0 20px;
     font-family: monospace;
   }
 
-  .typing-cursor::after {
-    content: '|';
-    animation: blink 1s infinite;
-  }
-
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
-  }
-
   .bio {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #888;
     line-height: 1.6;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
   .btn-primary {
     background: #2c3e50;
     color: white;
     border: none;
-    padding: 12px 30px;
-    border-radius: 12px;
-    font-size: 1rem;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-size: 0.95rem;
     cursor: pointer;
-    margin-right: 15px;
     transition: all 0.3s;
+    margin: 0;
   }
 
   .btn-primary:hover {
@@ -202,12 +293,13 @@
     background: transparent;
     border: 2px solid #2c3e50;
     color: #2c3e50;
-    padding: 10px 30px;
-    border-radius: 12px;
-    font-size: 1rem;
+    padding: 8px 25px;
+    border-radius: 10px;
+    font-size: 0.95rem;
     cursor: pointer;
   }
 
+  /* --- 右侧网格 (技能卡) --- */
   .skills-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -273,6 +365,16 @@
   @media (max-width: 768px) {
     .main-container {
       grid-template-columns: 1fr;
+    }
+
+    .intro-banner {
+      margin-bottom: 20px;
+      width: 90%;
+      padding: 20px;
+    }
+
+    .banner-content h2 {
+      font-size: 2.2rem;
     }
   }
 </style>
