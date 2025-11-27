@@ -45,7 +45,10 @@
 
 <script setup>
   import { ref, computed, onMounted, onUnmounted } from 'vue';
+  import { useRouter } from 'vue-router';
   import fm from 'front-matter'; // 引入 Markdown 解析库
+
+  const router = useRouter();
 
   // ==========================================
   // 1. 配置
@@ -183,8 +186,13 @@
   };
 
   const handleClick = (item) => {
-    console.log('你点击了文章:', item.title);
-    console.log('文件路径是:', item.filePath);
+    // 使用 router.push 跳转
+    // path: 对应我们在 router/index.js 里配置的 path
+    // query: 传递参数，这里我们把文件的路径传过去
+    router.push({
+      path: '/post',
+      query: { path: item.filePath }
+    });
   };
 </script>
 

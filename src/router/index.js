@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+// 路由懒加载引入
 const Home = () => import("@/views/Home/index.vue");
 const Blog = () => import("@/views/Blog/index.vue");
 const About = () => import("@/views/about/index.vue");
+// 【新增】引入文章详情页组件
+const PostDetail = () => import("@/views/Blog/PostDetail.vue");
 
 const routes = [
   {
@@ -18,6 +21,13 @@ const routes = [
     path: "/blog",
     name: "Blog",
     component: Blog,
+  },
+  // 【新增】配置文章详情页路由
+  // 当访问 /post?path=xxx 时，显示这个页面
+  {
+    path: "/post",
+    name: "PostDetail",
+    component: PostDetail,
   },
   {
     path: "/about",
