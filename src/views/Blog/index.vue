@@ -84,15 +84,17 @@
   const containerWidth = ref(1000);
   const currentPage = ref(1);
 
+  // 【核心设置】电脑端优先展示 3 列
   const columnCount = computed(() => {
     const w = containerWidth.value;
-    if (w < 500) return 2;
-    if (w < 800) return 3;
-    if (w < 1200) return 4;
-    return 5;
+    // 手机端 (< 600px)：2列
+    if (w < 600) return 2;
+    // 平板/电脑 (< 1200px)：3列 
+    if (w < 1200) return 3;
+    return 4;
   });
 
-  const gapSize = computed(() => containerWidth.value < 500 ? 8 : 12);
+  const gapSize = computed(() => containerWidth.value < 600 ? 10 : 15);
   let resizeObserver = null;
 
   onUnmounted(() => {
@@ -106,6 +108,8 @@
     return allData.value.slice(start, end);
   });
 
+
+  // 瀑布流分发算法
   const columns = computed(() => {
     const cols = Array.from({ length: columnCount.value }, () => []);
     currentDisplayData.value.forEach((item, index) => {
@@ -156,17 +160,22 @@
     /* 上下给点空隙，左右留点白，更透气 */
   }
 
-  /* 瀑布流 */
+  /* 瀑布流盒子 */
   .waterfall-box {
     display: flex;
     justify-content: flex-start;
+    /* 靠左排列 */
     align-items: flex-start;
+    /* 顶部对齐 */
   }
 
+  /* 每一列 */
   .column {
     flex: 1;
+    /* 均分宽度 */
     display: flex;
     flex-direction: column;
+    /* 列内垂直排列 */
     min-width: 0;
   }
 
