@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'Conv_FuturaStd-Book';
+  src: url('/fonts/FuturaStd-Book.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Conv_FuturaStd-Medium';
+  src: url('/fonts/FuturaStd-Medium.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Conv_FuturaStd-Heavy';
+  src: url('/fonts/FuturaStd-Heavy.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Conv_FuturaStd-Light';
+  src: url('/fonts/FuturaStd-Light.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}

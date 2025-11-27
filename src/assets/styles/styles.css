@@ -1,0 +1,54 @@
+/*
+ * Custom font declarations for the MP3jam Vue project.
+ *
+ * The original site defined several font formats (eot, ttf, svg) and
+ * referenced fonts relative to the CSS file. When using Vite we serve
+ * fonts from the `/fonts` directory in the public folder. Only the
+ * available woff files are referenced here. Additional formats can be
+ * added if you supply them under `public/fonts/`.
+ */
+@font-face {
+  font-family: 'Conv_FuturaStd-Book';
+  src: url('/fonts/FuturaStd-Book.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Conv_FuturaStd-Medium';
+  src: url('/fonts/FuturaStd-Medium.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Conv_FuturaStd-Heavy';
+  src: url('/fonts/FuturaStd-Heavy.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Conv_FuturaStd-Light';
+  src: url('/fonts/FuturaStd-Light.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+/* The HelveticaNeue fonts referenced in the original site were part of
+ * a wide banner not used in the current refactoring. Should you need
+ * these fonts in the future simply add the appropriate files to the
+ * `/public/fonts/widebannerIMBiOS/` directory and define them here.
+ */
+body {
+  min-width: 1100px;
+  max-width: 1700px;
+  margin: 0px auto;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  /* 水平居中 */
+  align-items: center;
+  /* 垂直居中 */
+  min-height: 100vh;
+  /* 使 body 至少占满整个视口高度 */
+  background-image: url('/images/background-body.png');
+  background-attachment: fixed;
+  /* 背景图片固定 */
+}
