@@ -3,4 +3,12 @@ compatibility_date = "2024-11-28"
 
 [build]
   command = "npm run build"
-  upload = { dir = "./dist/client" }
+  # 删除了上传路径，因为这是不需要的
+  # upload = { dir = "./dist/client" }
+
+# 指定 Worker 脚本入口点
+main = "src/index.ts"
+
+# 如果需要上传静态文件，您可以使用 assets 配置
+[[assets]]
+directory = "./dist"
