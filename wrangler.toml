@@ -2,7 +2,7 @@ name = "vueblog"
 compatibility_date = "2024-11-28"
 
 # Specify the entry point for the Worker script
-main = "src/index.ts"  # 根据实际情况调整路径
+# main = "src/index.ts"  # 根据实际情况调整路径
 
 [build]
   command = "npm run build"
