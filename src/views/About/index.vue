@@ -150,7 +150,7 @@
     position: relative;
     display: flex;
     justify-content: center;
-    padding: 80px 20px;
+    padding: 50px 5px;
     color: #333;
   }
 
