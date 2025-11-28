@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 // 路由懒加载引入
 const Home = () => import("@/views/Home/index.vue");
 const Blog = () => import("@/views/Blog/index.vue");
-const About = () => import("@/views/about/index.vue");
+const About = () => import("@/views/About/index.vue");
 // 【新增】引入文章详情页组件
 const PostDetail = () => import("@/views/Blog/PostDetail.vue");
 
