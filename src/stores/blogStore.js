@@ -40,7 +40,7 @@ export const useBlogStore = defineStore("blog", {
             title: attr.title || "无标题",
             img: attr.cover || "https://picsum.photos/400/300",
             aspectRatio: attr.ratio || 0.75,
-            user: attr.user || "博主",
+            user: attr.user || "lcj",
             avatar:
               attr.avatar ||
               "https://api.dicebear.com/7.x/miniavs/svg?seed=admin",

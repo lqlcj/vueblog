@@ -15,7 +15,7 @@
           <img :src="item.img" loading="lazy" :alt="item.title" />
           <div class="img-overlay">
             <div class="read-btn">
-              <span>READ</span>
+              <span>looklook</span>
             </div>
           </div>
         </div>
@@ -98,7 +98,6 @@
 </script>
 
 <style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
 
   .blog-bg-layer {
     position: fixed;
