@@ -77,7 +77,7 @@
 </script>
 
 <style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
+  /* @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap'); */
 
   /* --- 布局容器 --- */
   .dashboard-page {
@@ -92,6 +92,7 @@
     gap: 60px;
     /* 如果希望整个页面背景也有一个淡淡的底色，可以加上这行，不加也行，靠光斑撑起氛围 */
     /* background: linear-gradient(to bottom right, #fdfbfb, #ebedee); */
+    /* background-color: #fffbfb; */
   }
 
   /* --- 背景光斑 (形状不变，只改颜色) --- */

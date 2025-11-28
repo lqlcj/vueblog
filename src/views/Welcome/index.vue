@@ -124,7 +124,7 @@
 </script>
 
 <style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Noto+Serif+SC:wght@400;700&display=swap');
+  /* @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Noto+Serif+SC:wght@400;700&display=swap'); */
 
   :root {
     --ghibli-blue: #a7d0e8;
@@ -138,7 +138,9 @@
     min-height: 300vh;
     background-color: var(--ghibli-cream);
     color: var(--text-dark);
-    font-family: 'Noto Serif SC', serif;
+    /* 🔴 修改这里：优先使用楷体，没有的话再用宋体 */
+    /* 顺序含义：苹果楷体 -> 华文楷体 -> Windows楷体 -> 通用楷体 -> 衬线兜底 */
+    font-family: "KaiTi SC", "STKaiti", "KaiTi", "楷体", "FangSong", "SimSun", serif;
     overflow-x: hidden;
     position: relative;
   }
