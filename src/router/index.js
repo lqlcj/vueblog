@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import Welcome from "@/views/Welcome/index.vue";
 
 // 路由懒加载引入
 const Home = () => import("@/views/Home/index.vue");
@@ -11,8 +12,7 @@ const routes = [
   {
     path: "/",
     name: "Welcome",
-    // 1. 吉卜力风格欢迎页 (这是入口)
-    component: () => import("../views/Welcome/index.vue"),
+    component: Welcome, // 使用静态导入的组件
   },
   {
     path: "/home",
