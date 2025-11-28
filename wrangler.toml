@@ -1,5 +1,5 @@
 name = "vueblog"
-compatibility_date = "2025-11-28"
+compatibility_date = "2024-11-28"
 
 [build]
   command = "npm run build"
