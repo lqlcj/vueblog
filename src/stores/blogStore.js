@@ -1,3 +1,5 @@
+// todo: 有两个随机链接需要修正
+
 import { defineStore } from "pinia";
 import fm from "front-matter";
 

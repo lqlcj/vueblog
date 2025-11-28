@@ -1,3 +1,5 @@
+<!-- 欢迎页 -->
+
 <template>
   <div class="ghibli-container">
     <div class="sky-background">
@@ -15,8 +17,8 @@
             Digital Garden.
           </h1>
           <p class="intro-text">
-            这里没有复杂的代码，只有风、云和一些关于创造的故事。<br>
-            一个安静记录想法的地方。
+            这里没有复杂的代码，只有一些关于创造的故事。<br>
+            回归最纯粹的记录，一个安静记录想法的地方。
           </p>
           <div class="scroll-indicator">
             <span>↓ 向下探索旅程</span>
@@ -38,7 +40,7 @@
           <div class="illustration-box scroll-item delay-200">
             <div class="placeholder-art art-forest">
               🌲🌳🌿
-              <span>(Forest of Code)</span>
+              <span>(Welcome)</span>
             </div>
           </div>
         </div>
@@ -71,7 +73,7 @@
 
       <section class="section footer-section text-center scroll-item">
         <h2 class="handwritten end-title">Ready to enter?</h2>
-        <p>旅程正式开始。</p>
+
         <button class="soft-btn" @click="enterHome">进入主页 / Enter Home ➞</button>
       </section>
 

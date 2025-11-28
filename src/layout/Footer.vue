@@ -4,21 +4,19 @@
 
       <div class="left-section">
         <p class="welcome-text">
-          欢迎 <a href="https://www.mp3jam.org/dmca.html" target="_blank" class="highlight-link">Report Copyrighted</a>
+          欢迎 <a href="https://github.com/lqlcj" target="_blank" class="highlight-link">Report Copyrighted</a>
         </p>
 
         <div class="links-row">
           <a href="#" target="_blank">Privacy policy</a>
-          <a href="#" target="_blank">Refund policy</a>
-          <a href="#" target="_blank">Contact</a>
-          <a href="#" target="_blank">etc</a>
+          <a href="#" target="_blank">About</a>
         </div>
       </div>
 
       <div class="right-section">
         <div class="social-row">
-          <a href="#" target="_blank" class="social-btn facebook">FACEBOOK</a>
-          <a href="#" target="_blank" class="social-btn twitter">TWITTER</a>
+          <!-- <a href="#" target="_blank" class="social-btn facebook">FACEBOOK</a> -->
+          <a href="https://twitter.com/Cli13146688" target="_blank" class="social-btn twitter">TWITTER</a>
         </div>
 
         <span class="copyright">LCJ.ORG.2019</span>

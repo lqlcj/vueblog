@@ -1,3 +1,5 @@
+<!-- 博客文章页 -->
+
 <template>
   <div class="post-container">
     <div class="nav-bar">

@@ -1,196 +1,460 @@
 <template>
-  <div class="privacy-container">
-    <div class="wrapper">
+  <div class="about-page">
+    <div class="bg-gradient"></div>
 
-      <div class="page-title">
-        <h1 class="text-page-title">Privacy Statement</h1>
-      </div>
+    <div class="container">
+      <div class="glass-card fade-in">
 
-      <div class="text-page">
-        <h2 class="section-title">MP3jam Privacy Policy</h2>
-        <p>
-          This Privacy Policy covers the MP3jam software and the MP3jam website (<a href="/">www.mp3jam.org</a>).
-          We respect your privacy and want to explain what type of information we collect and how we manage it. If you
-          use the software and/or the website, you consent to the Privacy Policy.
-        </p>
+        <header class="about-header">
+          <h1 class="handwritten">About This Garden</h1>
+          <span class="update-badge">Last Updated: 2023.11</span>
+        </header>
 
-        <h2 class="section-title">Collected Information</h2>
-        <p>
-          The software and the website do not collect ANY personal information that helps to identify you as an
-          individual such as: name, sex, age, address, email address, contact phone number, logins, and passwords.
-          When you send feedback via email, you shall provide us your email address for the communication purpose.
-          In order to improve the software and the website, we collect non-personal information such as IP addresses. IP
-          address collection helps us to improve our website and the software because it indicates the time spent on our
-          website and a geo region.
-          We use “cookies” on the website. Cookies are stored on your computer and help us to improve our website as
-          they remember your website preferences and adjustments. For example, cookies show previously visited pages on
-          the website and help to load them faster; cookies also may show your selected language preferences, so you get
-          an appropriate language version of the website quicker.
-          We never merge IP addresses with any personal identifying information. Cookies on our website do not collect
-          or transmit any personal information.
-          You can always configure your browser to turn off cookies access. Usually cookies settings are located at
-          “Options” or “Privacy” tabs of a browser. Thus, you are eligible to use the software and the website
-          anonymously.
-        </p>
+        <div class="divider"></div>
 
-        <h2 class="section-title">Information Use</h2>
-        <p>
-          The software and the website do not collect, sell, transfer, rent, lease, publish, disclose and distribute
-          any personal Information without your consent to third parties.
-          Non-personally information about our users may be share with our partners and advertisers.
-        </p>
+        <article class="content-body">
 
-        <h2 class="section-title">Links to other Websites</h2>
-        <p>
-          This site and the software may contain links to other sites such as our advertisers and partners. Please check
-          their privacy statements since their privacy practices may be different from ours. This Privacy Policy is
-          solely for the MP3jam software and the MP3jam website (<a href="/">www.mp3jam.org</a>).
-        </p>
+          <section>
+            <h3>👋 Hello, Traveler.</h3>
+            <p>
+              欢迎来到我的数字后花园。这不仅仅是一个展示代码的博客，更是我思维碎片的暂存区。
+              这里的每一行代码都由 <strong>Vue 3 + Vite</strong> 驱动，每一篇文章都由 <strong>Obsidian</strong> 撰写。
+              我是一名热衷于构建极致体验的开发者，也是一名像素工匠。
+            </p>
+          </section>
 
-        <h2 class="section-title">Underage</h2>
-        <p>
-          MP3jam software and the MP3jam website (<a href="/">www.mp3jam.org</a>) are not made to attract anyone under
-          13. Visitors younger than 13 years old shall not use the software and the website.
-        </p>
+          <section>
+            <h3>🛡️ Privacy Policy</h3>
+            <p>既然你看到了这里，为了让你放心，我也写个“隐私声明”，但我的版本只有三句话：</p>
+            <ul class="policy-list">
+              <li><strong>1. 纯静态，无后台：</strong> 本站是一个纯静态网站。我没有数据库，没有登录系统。</li>
+              <li><strong>2. 关于 Cookies：</strong> 我只用 LocalStorage 记住你的偏好，没有追踪代码。</li>
+              <li><strong>3. 你的数据归你：</strong> 我不收集你的任何信息，所以你是自由的。</li>
+            </ul>
+          </section>
 
-        <h2 class="section-title">Changes</h2>
-        <p>
-          The Privacy Policy may change. The changes will be posted on the website.
-        </p>
+          <section>
+            <h3>⚡ Powered By</h3>
+            <p>为了构建这个网站，我使用了以下技术栈：</p>
+            <div class="tech-tags">
+              <span class="tag">Vue3</span>
+              <span class="tag">Vite</span>
+              <span class="tag">Pinia</span>
+              <span class="tag">JavaScript</span>
+              <span class="tag">CSS3</span>
+            </div>
+          </section>
 
-        <h2 class="section-title">Contact</h2>
-        <p>
-          If you have any comments or about the Privacy Policy, please contact us at <a
-            href="mailto:contact@mp3jam.org">contact@mp3jam.org</a>.
-        </p>
+          <section>
+            <h3>📮 Contact</h3>
+            <p>如果你发现了 Bug，或者只是想聊聊技术与设计，欢迎通过以下方式找到我。</p>
+
+            <div class="contact-box">
+
+              <div class="interaction-wrapper">
+                <transition name="smooth-switch" mode="out-in">
+
+                  <div v-if="!emailState.revealed" class="btn-pill outline pointer" @click="emailState.revealed = true"
+                    key="email-btn">
+                    Email Me ➞
+                  </div>
+
+                  <div v-else class="email-display-box" key="email-show">
+                    <span class="email-text">{{ emailAddress }}</span>
+                    <button class="icon-btn" @click="copyEmail" :title="emailState.copied ? '已复制' : '点击复制'">
+                      <transition name="icon-pop" mode="out-in">
+                        <span v-if="emailState.copied" key="check">✅</span>
+                        <span v-else key="copy">📋</span>
+                      </transition>
+                    </button>
+                  </div>
+
+                </transition>
+              </div>
+
+              <div class="interaction-wrapper">
+                <transition name="smooth-switch" mode="out-in">
+
+                  <div v-if="!githubState.confirming" class="btn-pill outline pointer"
+                    @click="githubState.confirming = true" key="github-btn">
+                    Github ➞
+                  </div>
+
+                  <div v-else class="confirm-box" key="github-confirm">
+                    <span class="confirm-text">Go to Github?</span>
+                    <button class="btn-mini go" @click="goToGithub">Yes 🚀</button>
+                    <button class="btn-mini cancel" @click="githubState.confirming = false">Wait ✋</button>
+                  </div>
+
+                </transition>
+              </div>
+
+            </div>
+          </section>
+
+        </article>
+
+        <footer class="about-footer">
+          <p class="handwritten sign">Made with ❤️ by Creator.</p>
+        </footer>
+
       </div>
     </div>
-
-    <div class="AboutFooter"></div>
   </div>
 </template>
 
 <script setup>
+  import { reactive } from 'vue'
+
+  const emailAddress = "cli20220909@gmail.com"
+
+  // 邮箱状态管理
+  const emailState = reactive({
+    revealed: false,
+    copied: false
+  })
+
+  // Github 状态管理
+  const githubState = reactive({
+    confirming: false
+  })
+
+  // 复制邮箱逻辑
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(emailAddress)
+      emailState.copied = true
+      // 2秒后恢复图标
+      setTimeout(() => {
+        emailState.copied = false
+      }, 2000)
+    } catch (err) {
+      console.error('Failed to copy', err)
+    }
+  }
+
+  // 跳转 Github
+  const goToGithub = () => {
+    window.open('https://github.com', '_blank')
+    githubState.confirming = false // 重置状态
+  }
+
 </script>
 
 <style scoped>
-  /* 使用 scoped 防止样式污染全局 */
+  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
 
-  .privacy-container {
-    width: 100%;
+  /* --- 基础布局 --- */
+  .about-page {
     min-height: 100vh;
-    /* 确保背景图路径正确，如果找不到图可以暂时删掉这一行 */
-    background-image: url('../assets/images/About/figure_06.png');
-    background-size: cover;
-    /* 让背景图自适应 */
-    background-position: center top;
-    overflow-x: hidden;
-    /* 禁止横向溢出 */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 80px 20px;
+    color: #333;
   }
 
-  .wrapper {
+  .bg-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    /* 限制最大宽度，但允许比这个小 */
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(135deg, #FFDDE1 0%, #E0C3FC 100%);
   }
 
-  /* --- 标题样式 --- */
-  .text-page-title {
-    color: #7d1951;
-    /* 字体设置：优先用自定义字体，没有则用系统字体 */
-    font-family: 'PFBold', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: bold;
-    font-size: 56px;
+  .container {
+    width: 100%;
+    max-width: 800px;
+    z-index: 1;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 24px;
+    padding: 60px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+  }
+
+  .fade-in {
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* --- 排版 --- */
+  .about-header {
     text-align: center;
-    margin: 40px 0 30px;
-    letter-spacing: 0.012em;
-    line-height: 1.2;
-
-    /* 关键修复：允许换行，而不是 nowrap */
-    white-space: normal;
-    word-wrap: break-word;
+    margin-bottom: 40px;
   }
 
-  /* --- 小标题样式 (原代码里用的 class="title") --- */
-  .section-title {
-    color: #7d1951;
-    /* 和正文颜色稍作区分，或者保持一致 */
-    font-family: 'PFRegular', sans-serif;
-    font-weight: bold;
-    font-size: 20px;
-    margin-top: 30px;
-    margin-bottom: 10px;
+  .handwritten {
+    font-family: 'Caveat', cursive;
+    font-size: 3.5rem;
+    margin: 0 0 10px 0;
+    color: #5d4037;
   }
 
-  /* --- 正文段落样式 --- */
-  .text-page p {
-    color: #762d52;
-    font-family: 'PFRegular', sans-serif;
-    font-size: 16px;
-    line-height: 1.6em;
+  .subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 15px;
+  }
+
+  .update-badge {
+    font-size: 0.8rem;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: #888;
+  }
+
+  .divider {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
+  }
+
+  .content-body h3 {
+    font-size: 1.5rem;
     margin-bottom: 20px;
-
-    /* 关键修复：宽度不再是固定的 816px */
-    width: 100%;
-    max-width: 816px;
-    /* 在大屏幕上限制最宽只能这么宽 */
-    margin-left: auto;
-    margin-right: auto;
+    color: #2c3e50;
+    border-left: 4px solid #ff9a9e;
+    padding-left: 15px;
   }
 
-  /* --- 链接样式 --- */
-  a {
-    font-family: 'PFRegular', sans-serif;
-    color: #a89b00;
-    text-decoration: underline;
-    word-break: break-all;
-    /* 防止长链接撑破手机屏幕 */
+  .content-body section {
+    margin-bottom: 50px;
   }
 
-  a:hover {
-    text-decoration: none;
+  .content-body p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 15px;
+    text-align: justify;
   }
 
-  /* --- 底部图片 --- */
-  .AboutFooter {
-    width: 100%;
-    height: 150px;
-    background-image: url('../assets/images/About/footer-bg.png');
-    background-size: cover;
-    /* 让图片填满容器 */
-    background-position: center;
-    margin-top: 40px;
-    border-radius: 16px 16px 0 0;
+  .policy-list li {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #666;
   }
 
-  /* --- 📱 手机端适配 (Media Query) --- */
-  /* 当屏幕宽度小于 768px (iPad/手机) 时，应用下面的样式 */
+  .policy-list strong {
+    color: #d84315;
+  }
+
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .tag {
+    background: #fff;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #555;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s;
+  }
+
+  .tag:hover {
+    transform: translateY(-2px);
+    color: #ff9a9e;
+  }
+
+  /* =========================================
+   交互核心样式
+========================================= */
+  .contact-box {
+    margin-top: 25px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .interaction-wrapper {
+    min-width: 140px;
+    /* 占位，防止切换时抖动太厉害 */
+  }
+
+  /* 通用胶囊按钮样式 */
+  .btn-pill {
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  .outline {
+    border: 2px solid #6c5ce7;
+    color: #6c5ce7;
+    background: transparent;
+  }
+
+  .outline:hover {
+    background: #6c5ce7;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2);
+  }
+
+  /* Email 显示框 */
+  .email-display-box {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 5px 10px 5px 20px;
+    border-radius: 50px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .email-text {
+    font-family: monospace;
+    color: #d84315;
+    margin-right: 10px;
+    font-size: 0.95rem;
+  }
+
+  .icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background 0.2s;
+  }
+
+  .icon-btn:hover {
+    background: #f0f0f0;
+  }
+
+  /* Github 确认框 */
+  .confirm-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    padding: 5px 10px 5px 20px;
+    border-radius: 50px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .confirm-text {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: bold;
+  }
+
+  .btn-mini {
+    border: none;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.2s;
+  }
+
+  .btn-mini:hover {
+    opacity: 0.8;
+  }
+
+  .go {
+    background: #6c5ce7;
+    color: white;
+  }
+
+  .cancel {
+    background: #e0e0e0;
+    color: #666;
+  }
+
+  /* --- 丝滑切换动画 (核心) --- */
+  .smooth-switch-enter-active,
+  .smooth-switch-leave-active {
+    transition: all 0.3s ease;
+  }
+
+  .smooth-switch-enter-from,
+  .smooth-switch-leave-to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  /* 图标弹跳动画 */
+  .icon-pop-enter-active {
+    animation: popIn 0.3s;
+  }
+
+  @keyframes popIn {
+    0% {
+      transform: scale(0);
+    }
+
+    50% {
+      transform: scale(1.4);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .about-footer {
+    text-align: center;
+    margin-top: 60px;
+    opacity: 0.6;
+  }
+
+  .sign {
+    font-size: 1.5rem;
+    color: #888;
+  }
+
   @media (max-width: 768px) {
-
-    .text-page-title {
-      font-size: 32px;
-      /* 手机上字号改小 */
-      margin: 20px 0;
+    .glass-card {
+      padding: 30px 20px;
     }
 
-    .wrapper {
-      padding: 15px;
-      /* 减少两侧留白 */
+    .handwritten {
+      font-size: 2.5rem;
     }
 
-    .text-page p {
-      font-size: 15px;
-      /* 正文字号微调 */
-      text-align: justify;
-      /* 手机上两端对齐更好看 */
-    }
-
-    .AboutFooter {
-      height: 100px;
-      /* 手机上底部图片高度减小 */
-      border-radius: 0;
+    .contact-box {
+      flex-direction: column;
+      gap: 20px;
+      align-items: flex-start;
     }
   }
 </style>
