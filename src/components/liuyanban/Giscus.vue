@@ -36,56 +36,16 @@
   import { useRoute } from 'vue-router'
 
   const props = defineProps({
-    // Giscus 配置参数
-    repo: {
-      type: String,
-      required: true,
-      // 格式: "username/repo-name"
-      // 例如: "lcj/vueblog"
-    },
-    repoId: {
-      type: String,
-      required: true,
-      // 从 https://github.com/apps/giscus 获取
-    },
-    category: {
-      type: String,
-      default: 'Announcements',
-      // Discussions 分类名称
-    },
-    categoryId: {
-      type: String,
-      required: true,
-      // 从 https://github.com/apps/giscus 获取
-    },
-    // 可选配置
-    mapping: {
-      type: String,
-      default: 'pathname',
-      // pathname | url | title | og:title
-    },
-    reactionsEnabled: {
-      type: Boolean,
-      default: true,
-    },
-    emitMetadata: {
-      type: Boolean,
-      default: false,
-    },
-    inputPosition: {
-      type: String,
-      default: 'bottom',
-      // top | bottom
-    },
-    theme: {
-      type: String,
-      default: 'light',
-      // light | dark | dark_dimmed | transparent_dark | preferred_color_scheme
-    },
-    lang: {
-      type: String,
-      default: 'zh-CN',
-    },
+    repo: { type: String, required: true },
+    repoId: { type: String, required: true },
+    category: { type: String, default: 'Announcements' },
+    categoryId: { type: String, required: true },
+    mapping: { type: String, default: 'pathname' },
+    reactionsEnabled: { type: Boolean, default: true },
+    emitMetadata: { type: Boolean, default: false },
+    inputPosition: { type: String, default: 'bottom' },
+    theme: { type: String, default: 'light' },
+    lang: { type: String, default: 'zh-CN' },
   })
 
   const route = useRoute()
@@ -96,41 +56,30 @@
   let loadTimeout = null
   let checkInterval = null
 
-  // 检测 Giscus 是否成功加载
   const checkGiscusLoaded = () => {
     if (!giscusContainer.value) return false
-
-    // 检查是否有 iframe 元素
     const iframe = giscusContainer.value.querySelector('iframe.giscus-frame')
     if (iframe) {
-      // 检查 iframe 是否已加载内容
       try {
-        // 如果 iframe 存在且高度大于 0，认为加载成功
         if (iframe.offsetHeight > 0) {
           return true
         }
       } catch (e) {
-        // 跨域限制，无法访问 iframe 内容
-        // 但 iframe 存在说明 script 已加载
         return true
       }
     }
     return false
   }
 
-  // 加载 Giscus
   const loadGiscus = () => {
-    // 重置状态
     isLoading.value = true
     hasError.value = false
 
-    // 如果已经加载过，先移除旧的
     if (giscusScript) {
       giscusScript.remove()
       giscusScript = null
     }
 
-    // 清除之前的定时器
     if (loadTimeout) {
       clearTimeout(loadTimeout)
       loadTimeout = null
@@ -140,12 +89,10 @@
       checkInterval = null
     }
 
-    // 清空容器
     if (giscusContainer.value) {
       giscusContainer.value.innerHTML = ''
     }
 
-    // 创建 script 标签
     giscusScript = document.createElement('script')
     giscusScript.src = 'https://giscus.app/client.js'
     giscusScript.setAttribute('data-repo', props.repo)
@@ -163,9 +110,7 @@
     giscusScript.crossOrigin = 'anonymous'
     giscusScript.async = true
 
-    // 监听 script 加载成功
     giscusScript.onload = () => {
-      // Script 加载成功，开始检测 iframe
       checkInterval = setInterval(() => {
         if (checkGiscusLoaded()) {
           isLoading.value = false
@@ -179,9 +124,8 @@
             loadTimeout = null
           }
         }
-      }, 500) // 每 500ms 检查一次
+      }, 500)
 
-      // 10 秒后如果还没加载成功，认为失败
       loadTimeout = setTimeout(() => {
         if (isLoading.value) {
           isLoading.value = false
@@ -194,7 +138,6 @@
       }, 10000)
     }
 
-    // 监听 script 加载失败
     giscusScript.onerror = () => {
       isLoading.value = false
       hasError.value = true
@@ -208,12 +151,10 @@
       }
     }
 
-    // 添加到容器
     if (giscusContainer.value) {
       giscusContainer.value.appendChild(giscusScript)
     }
 
-    // 备用超时检测（15 秒）
     setTimeout(() => {
       if (isLoading.value && !checkGiscusLoaded()) {
         isLoading.value = false
@@ -226,16 +167,13 @@
     }, 15000)
   }
 
-  // 重试加载
   const retryLoad = () => {
     loadGiscus()
   }
 
-  // 监听路由变化，重新加载（用于 SPA 路由切换）
   watch(
     () => route.fullPath,
     () => {
-      // 延迟加载，确保 DOM 已更新
       setTimeout(() => {
         loadGiscus()
       }, 100)
@@ -276,9 +214,7 @@
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
   }
 
   .comments-container:hover {
@@ -289,7 +225,6 @@
     border-color: rgba(224, 195, 252, 0.4);
   }
 
-  /* 顶部渐变装饰条 - 更柔和 */
   .comments-container::before {
     content: '';
     position: absolute;
@@ -305,7 +240,6 @@
     z-index: 1;
   }
 
-  /* 标题区域 - 更紧凑 */
   .comments-header {
     padding: 20px 24px 16px;
     text-align: center;
@@ -342,46 +276,32 @@
     z-index: 1;
     padding: 16px 24px 24px;
     background: transparent;
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
-  /* 自定义 Giscus 样式 - 更紧凑 */
-  :deep(.giscus) {
-    margin-top: 0;
-    font-size: 0.9rem;
+  .giscus-wrapper::-webkit-scrollbar {
+    width: 8px;
   }
 
-  /* 覆盖 Giscus iframe 样式 */
-  :deep(.giscus-frame) {
-    border-radius: 12px;
-    overflow: hidden;
-    border: none;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-  }
-
-  /* 自定义滚动条样式 - 更柔和的颜色 */
-  :deep(.giscus) ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  :deep(.giscus) ::-webkit-scrollbar-track {
+  .giscus-wrapper::-webkit-scrollbar-track {
     background: rgba(224, 195, 252, 0.1);
     border-radius: 8px;
   }
 
-  :deep(.giscus) ::-webkit-scrollbar-thumb {
+  .giscus-wrapper::-webkit-scrollbar-thumb {
     background: linear-gradient(135deg, rgba(162, 155, 254, 0.6) 0%, rgba(108, 92, 231, 0.6) 100%);
     border-radius: 8px;
     border: 1px solid transparent;
     background-clip: padding-box;
   }
 
-  :deep(.giscus) ::-webkit-scrollbar-thumb:hover {
+  .giscus-wrapper::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(135deg, rgba(162, 155, 254, 0.8) 0%, rgba(108, 92, 231, 0.8) 100%);
     background-clip: padding-box;
   }
 
-  /* 加载状态 */
   .loading-state {
     padding: 40px 24px;
     text-align: center;
@@ -409,7 +329,6 @@
     font-size: 0.9rem;
   }
 
-  /* 错误降级方案 */
   .error-fallback {
     padding: 32px 24px;
     text-align: center;
@@ -464,12 +383,10 @@
     font-size: 1.1rem;
   }
 
-  /* 响应式调整 */
   @media (max-width: 767px) {
     .comments-container {
       margin-top: 30px;
       border-radius: 14px;
-      max-width: 100%;
     }
 
     .comments-header {
@@ -486,6 +403,7 @@
 
     .giscus-wrapper {
       padding: 12px 16px 20px;
+      max-height: 500px;
     }
 
     .error-fallback {
@@ -493,3 +411,5 @@
     }
   }
 </style>
+
+

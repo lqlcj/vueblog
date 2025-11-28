@@ -7,7 +7,6 @@
 
     <div class="main-container">
       <HomeProfile />
-      <HomeSkills />
     </div>
 
     <!-- 留言系统 -->
@@ -19,14 +18,27 @@
 </template>
 
 <script setup>
-  // 🚀 性能优化：子组件改为异步导入，实现代码分割
-  import { defineAsyncComponent } from 'vue'
-  import Giscus from '@/components/liuyanban/Giscus.vue'
+  // 🚀 性能优化：留言板异步加载，其他组件直接导入
+  import { defineAsyncComponent, onMounted, nextTick } from 'vue'
+  import HomeBanner from '@/components/Home/HomeBanner.vue'
+  import HomeProfile from '@/components/Home/HomeProfile.vue'
   import { giscusConfig } from '@/config/giscus'
+  import { useConfetti } from '@/composables/useConfetti'
 
-  const HomeBanner = defineAsyncComponent(() => import('@/components/Home/HomeBanner.vue'))
-  const HomeProfile = defineAsyncComponent(() => import('@/components/Home/HomeProfile.vue'))
-  const HomeSkills = defineAsyncComponent(() => import('@/components/Home/HomeSkills.vue'))
+  // 留言板异步加载，确保在其他组件加载完成后再加载
+  const Giscus = defineAsyncComponent(() => import('@/components/liuyanban/Giscus.vue'))
+
+  const { birthday } = useConfetti()
+
+  // 等待所有组件加载完成后触发生日效果
+  onMounted(async () => {
+    // 等待所有异步组件加载完成
+    await nextTick()
+    // 再延迟一段时间，确保所有组件完全渲染和动画完成
+    setTimeout(() => {
+      birthday()
+    }, 800)
+  })
 
 </script>
 
@@ -92,11 +104,8 @@
     }
   }
 
-  /* --- 核心 Grid 布局 --- */
+  /* --- 核心容器布局 --- */
   .main-container {
-    display: grid;
-    grid-template-columns: 0.9fr 1fr;
-    gap: 40px;
     max-width: 1000px;
     width: 100%;
     z-index: 10;
@@ -121,8 +130,7 @@
     }
 
     .main-container {
-      grid-template-columns: 1fr;
-      gap: 30px;
+      gap: 20px;
     }
 
     /* 调整光斑位置，防止手机上挡住重要内容 */

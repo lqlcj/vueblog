@@ -213,7 +213,7 @@
   }
 
   .soft-btn {
-    margin-top: 37px;
+    margin-top: 30px;
     padding: 15px 40px;
     background: var(--ghibli-blue);
     color: #fff;

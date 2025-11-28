@@ -10,29 +10,23 @@
   import { ref, onMounted, onUnmounted } from 'vue'
 
   const visible = ref(false)
-  let ticking = false
 
-  // 1. 性能优化：使用 requestAnimationFrame 节流滚动事件
+  // 1. 监听滚动事件
   const handleScroll = () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        visible.value = window.scrollY > 300
-        ticking = false
-      })
-      ticking = true
-    }
+    // 当向下滚动超过 300px 时显示按钮
+    visible.value = window.scrollY > 300
   }
 
   // 2. 核心功能：平滑滚动到顶部
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: 'smooth' // 关键：平滑滚动
     })
   }
 
   onMounted(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('scroll', handleScroll)
   })
 
   onUnmounted(() => {
