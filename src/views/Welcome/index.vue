@@ -85,7 +85,6 @@
 
   const router = useRouter()
 
-  // 修改：跳转到 3D 主页
   const enterHome = () => {
     router.push('/home')
   }
@@ -98,9 +97,10 @@
 
     const options = {
       root: null,
-      // 修改：0.15 表示只要露出 15% 就开始显示，比之前的 0.2 更灵敏
-      threshold: 0.15,
-      rootMargin: "0px"
+      // 阈值设小一点，让元素更早开始准备动画
+      threshold: 0.1,
+      // rootMargin 向下扩大一点，让元素在还没完全进入屏幕时就开始渲染，减少视觉突兀感
+      rootMargin: "0px 0px -50px 0px"
     }
 
     const observerCallback = (entries, observer) => {
@@ -124,6 +124,7 @@
 </script>
 
 <style scoped>
+  /* 字体部分保持你现在的设置（本地+系统），所以我注释掉了 Google Fonts */
   /* @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Noto+Serif+SC:wght@400;700&display=swap'); */
 
   :root {
@@ -138,14 +139,14 @@
     min-height: 300vh;
     background-color: var(--ghibli-cream);
     color: var(--text-dark);
-    /* 🔴 修改这里：优先使用楷体，没有的话再用宋体 */
-    /* 顺序含义：苹果楷体 -> 华文楷体 -> Windows楷体 -> 通用楷体 -> 衬线兜底 */
+    /* 使用你之前确定的楷体方案 */
     font-family: "KaiTi SC", "STKaiti", "KaiTi", "楷体", "FangSong", "SimSun", serif;
     overflow-x: hidden;
     position: relative;
   }
 
   .handwritten {
+    /* 使用你下载好的本地 Caveat */
     font-family: 'Caveat', cursive;
     color: #34495e;
   }
@@ -160,7 +161,7 @@
     padding: 0 20px;
   }
 
-  /* --- 动态天空背景 --- */
+  /* --- 动态天空背景 (性能优化版) --- */
   .sky-background {
     position: fixed;
     top: 0;
@@ -170,6 +171,8 @@
     background: linear-gradient(to bottom, #d4eaff 0%, #fef9e7 80%);
     z-index: 0;
     overflow: hidden;
+    /* 强制 GPU 渲染整个背景层 */
+    transform: translateZ(0);
   }
 
   .cloud {
@@ -178,6 +181,9 @@
     filter: blur(60px);
     opacity: 0.6;
     animation: floatCloud 60s infinite linear;
+    /* 🚀 性能关键：开启 GPU 加速，防止背景卡顿 */
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   .cloud-1 {
@@ -195,6 +201,7 @@
     background: #e3f2fd;
     bottom: -300px;
     right: -20%;
+    animation-duration: 100s;
     animation-delay: -20s;
   }
 
@@ -211,15 +218,16 @@
 
   @keyframes floatCloud {
     0% {
-      transform: translate(0, 0) scale(1);
+      transform: translate3d(0, 0, 0) scale(1);
     }
 
+    /* 使用 3d 强制 GPU */
     50% {
-      transform: translate(100px, 50px) scale(1.1);
+      transform: translate3d(100px, 50px, 0) scale(1.1);
     }
 
     100% {
-      transform: translate(0, 0) scale(1);
+      transform: translate3d(0, 0, 0) scale(1);
     }
   }
 
@@ -341,6 +349,7 @@
 
   .skill-card {
     background: rgba(255, 255, 255, 0.8);
+    /* 毛玻璃效果很吃性能，如果手机卡，可以注释掉下面这行 backdrop-filter */
     backdrop-filter: blur(10px);
     padding: 40px;
     border-radius: 24px;
@@ -348,6 +357,8 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     border: 2px solid white;
     transition: transform 0.3s ease;
+    will-change: transform;
+    /* 性能优化 */
   }
 
   .skill-card:hover {
@@ -398,12 +409,19 @@
     box-shadow: 0 15px 25px -5px rgba(167, 208, 232, 0.6);
   }
 
-  /* --- 核心：滚动出现的动画 (已提速) --- */
+  /* --- 🚀 核心：超丝滑滚动动画 --- */
   .scroll-item {
     opacity: 0;
-    transform: translateY(60px);
-    /* 修改：从 0.8s 改为 0.6s，感觉更利索 */
-    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform: translateY(40px);
+    /* 移动距离减小，让动画更紧凑 */
+
+    /* 🚀 关键修改：更高级的贝塞尔曲线 */
+    /* 这叫 Ease Out Expo，效果是：快起步 -> 极其平滑的减速停车 */
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+
+    will-change: opacity, transform;
+    /* 告诉浏览器提前准备显卡 */
   }
 
   .scroll-item.visible {
@@ -419,7 +437,7 @@
     transition-delay: 0.2s;
   }
 
-  /* --- 手机端响应式 --- */
+  /* --- 手机端 --- */
   @media (max-width: 768px) {
     .main-title {
       font-size: 3rem;
@@ -442,10 +460,15 @@
       height: 250px;
     }
 
-    /* 手机端按钮小一点 */
     .soft-btn {
       padding: 12px 30px;
       font-size: 1rem;
+    }
+
+    /* 手机端禁用 backdrop-filter 以提升滚动帧率 */
+    .skill-card {
+      backdrop-filter: none;
+      background: rgba(255, 255, 255, 0.95);
     }
   }
 </style>
