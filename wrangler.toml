@@ -1,14 +1,11 @@
 name = "vueblog"
 compatibility_date = "2024-11-28"
 
+# Specify the entry point for the Worker script
+main = "src/index.ts"  # 根据实际情况调整路径
+
 [build]
   command = "npm run build"
-  # 删除了上传路径，因为这是不需要的
-  # upload = { dir = "./dist/client" }
 
-# 指定 Worker 脚本入口点
-main = "src/index.ts"
-
-# 如果需要上传静态文件，您可以使用 assets 配置
-# [[assets]]
-# directory = "./dist"
+[[assets]]
+directory = "./dist"  # 如果您有构建后的静态文件
