@@ -1,30 +1,35 @@
-<!-- 博客文章页 -->
-
 <template>
-  <div class="post-container">
-    <div class="nav-bar">
-      <button @click="goBack" class="back-btn">← 返回列表</button>
-    </div>
-
-    <div v-if="post" class="article-content">
-      <div v-if="post.attributes.cover" class="cover-img">
-        <img :src="post.attributes.cover" alt="cover" />
+  <div class="post-page-bg">
+    <div class="post-container">
+      <div class="nav-bar">
+        <button @click="goBack" class="back-btn">← 返回列表</button>
       </div>
 
-      <h1 class="main-title">{{ post.attributes.title }}</h1>
+      <div v-if="post" class="article-wrapper glass-card">
 
-      <div class="meta-info">
-        <span>{{ post.attributes.date }}</span>
-        <span v-if="post.attributes.user"> · {{ post.attributes.user }}</span>
+        <div class="article-content">
+          <div v-if="post.attributes.cover" class="cover-img">
+            <img :src="post.attributes.cover" alt="cover" />
+          </div>
+
+          <h1 class="main-title">{{ post.attributes.title }}</h1>
+
+          <div class="meta-info">
+            <span>{{ post.attributes.date }}</span>
+            <span v-if="post.attributes.user"> · {{ post.attributes.user }}</span>
+          </div>
+
+          <hr class="separator" />
+
+          <div class="markdown-body" v-html="htmlContent"></div>
+        </div>
+
       </div>
 
-      <hr />
-
-      <div class="markdown-body" v-html="htmlContent"></div>
-    </div>
-
-    <div v-else class="loading">
-      加载中...
+      <div v-else class="loading">
+        <div class="spinner"></div>
+        <p>文章加载中...</p>
+      </div>
     </div>
   </div>
 </template>
@@ -32,42 +37,49 @@
 <script setup>
   import { ref, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import fm from 'front-matter';
-  import MarkdownIt from 'markdown-it';
-  import 'github-markdown-css'; // 引入 GitHub 的文章样式
+  // 保持依赖动态导入，解决 820KB bloat 问题
+  import { default as fm } from 'front-matter';
+  import { default as MarkdownIt } from 'markdown-it';
 
   const route = useRoute();
   const router = useRouter();
-  const md = new MarkdownIt(); // 初始化解析器
 
   const post = ref(null);
   const htmlContent = ref('');
 
-  // 重新读取所有文章（为了找到当前这一篇）
-  // 注意：这里路径要和你瀑布流里写的一模一样！
-  const mdFiles = import.meta.glob('/src/posts/*.md', {
-    query: '?raw',
-    import: 'default',
-    eager: true
-  });
+  // 🔴 移除：import.meta.glob - 我们不再需要全局索引，只需导入单个文件
 
-  onMounted(() => {
-    // 1. 从路由参数里拿到文件路径 (比如 /src/posts/01.md)
-    const filePath = route.query.path;
+  onMounted(async () => {
+    try {
+      const filePath = route.query.path; // e.g., /src/posts/01.md
 
-    if (filePath && mdFiles[filePath]) {
-      // 2. 读取文件内容
-      const rawContent = mdFiles[filePath];
+      if (filePath) {
 
-      // 3. 解析 Frontmatter 和 正文
-      const parsed = fm(rawContent);
-      post.value = parsed;
+        // 1. 🔴 关键修复：直接动态导入单个文件内容
+        // 使用 /* @vite-ignore */ 确保 Vite 将其视为纯动态导入，不进行全局索引冲突
+        const rawContentModule = await import(/* @vite-ignore */ filePath + '?raw');
 
-      // 4. 把正文转换成 HTML
-      htmlContent.value = md.render(parsed.body);
-    } else {
-      alert('文章找不到了！');
-      goBack();
+        const rawContent = rawContentModule.default;
+
+        // 2. 初始化解析器 (MarkdownIt 和 fm 库已经通过顶部静态导入加载)
+        const md = new MarkdownIt({
+          html: true,
+          linkify: true,
+          typographer: true
+        });
+
+        // 3. 解析和渲染
+        const parsed = fm(rawContent);
+        post.value = parsed;
+        htmlContent.value = md.render(parsed.body);
+
+      } else {
+        router.push('/blog');
+      }
+    } catch (e) {
+      console.error("Post loading error:", e);
+      // 遇到错误，直接跳回列表
+      router.push('/blog');
     }
   });
 
@@ -77,15 +89,22 @@
 </script>
 
 <style scoped>
+  /* 样式保持不变 */
+  @import 'github-markdown-css';
 
-  /* 容器样式 */
+  .post-page-bg {
+    background: linear-gradient(135deg, #FFDDE1 0%, #E0C3FC 100%);
+    padding: 40px 20px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+  }
+
   .post-container {
     max-width: 800px;
-    /* 文章页不用太宽，800px阅读体验最好 */
+    width: 100%;
     margin: 0 auto;
-    padding: 20px;
-    background: #fff;
-    min-height: 100vh;
+    min-height: 80vh;
   }
 
   .nav-bar {
@@ -99,44 +118,103 @@
     cursor: pointer;
     color: #666;
     padding: 0;
+    transition: color 0.2s;
   }
 
   .back-btn:hover {
-    color: #ff2442;
+    color: #6c5ce7;
+  }
+
+  .article-wrapper {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+  }
+
+  .article-content {
+    opacity: 1;
+    transition: opacity 0.5s;
   }
 
   .cover-img img {
     width: 100%;
     border-radius: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     max-height: 400px;
     object-fit: cover;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
 
   .main-title {
-    font-size: 28px;
+    font-size: 2rem;
     margin-bottom: 10px;
     color: #333;
+    line-height: 1.3;
   }
 
   .meta-info {
     color: #999;
-    font-size: 14px;
+    font-size: 0.9rem;
     margin-bottom: 20px;
   }
 
-  /* markdown-body 也就是正文区域的一些微调 */
+  .separator {
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    margin: 20px 0;
+  }
+
   .markdown-body {
     box-sizing: border-box;
-    min-width: 200px;
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 15px 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 80px;
+    color: #6c5ce7;
+  }
+
+  .spinner {
+    border: 4px solid rgba(108, 92, 231, 0.1);
+    border-top: 4px solid #6c5ce7;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   @media (max-width: 767px) {
+    .post-page-bg {
+      padding: 15px 10px;
+    }
+
+    .article-wrapper {
+      padding: 25px 20px;
+    }
+
+    .main-title {
+      font-size: 1.6rem;
+    }
+
     .markdown-body {
-      padding: 15px;
+      font-size: 0.95rem;
     }
   }
 </style>

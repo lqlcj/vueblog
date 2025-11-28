@@ -126,8 +126,6 @@
 </script>
 
 <style scoped>
-  /* 字体部分保持你现在的设置（本地+系统），所以我注释掉了 Google Fonts */
-  /* @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Noto+Serif+SC:wght@400;700&display=swap'); */
 
   :root {
     --ghibli-blue: #a7d0e8;

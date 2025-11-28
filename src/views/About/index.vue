@@ -142,7 +142,7 @@
 </script>
 
 <style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
+  /* @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap'); */
 
   /* --- 基础布局 --- */
   .about-page {
