@@ -54,17 +54,18 @@
               <div class="interaction-wrapper">
                 <transition name="smooth-switch" mode="out-in">
 
-                  <div v-if="!emailState.revealed" class="btn-pill outline pointer" @click="emailState.revealed = true"
-                    key="email-btn">
+                  <button v-if="!emailState.revealed" class="btn-pill outline pointer"
+                    @click="emailState.revealed = true" key="email-btn" aria-label="显示邮箱地址">
                     Email Me ➞
-                  </div>
+                  </button>
 
                   <div v-else class="email-display-box" key="email-show">
-                    <span class="email-text">{{ emailAddress }}</span>
-                    <button class="icon-btn" @click="copyEmail" :title="emailState.copied ? '已复制' : '点击复制'">
+                    <span class="email-text" aria-label="邮箱地址">{{ emailAddress }}</span>
+                    <button class="icon-btn" @click="copyEmail" :title="emailState.copied ? '已复制' : '点击复制'"
+                      :aria-label="emailState.copied ? '已复制到剪贴板' : '复制邮箱地址'">
                       <transition name="icon-pop" mode="out-in">
-                        <span v-if="emailState.copied" key="check">✅</span>
-                        <span v-else key="copy">📋</span>
+                        <span v-if="emailState.copied" key="check" aria-hidden="true">✅</span>
+                        <span v-else key="copy" aria-hidden="true">📋</span>
                       </transition>
                     </button>
                   </div>
@@ -75,15 +76,19 @@
               <div class="interaction-wrapper">
                 <transition name="smooth-switch" mode="out-in">
 
-                  <div v-if="!githubState.confirming" class="btn-pill outline pointer"
-                    @click="githubState.confirming = true" key="github-btn">
+                  <button v-if="!githubState.confirming" class="btn-pill outline pointer"
+                    @click="githubState.confirming = true" key="github-btn" aria-label="打开 Github">
                     Github ➞
-                  </div>
+                  </button>
 
-                  <div v-else class="confirm-box" key="github-confirm">
+                  <div v-else class="confirm-box" key="github-confirm" role="dialog" aria-label="确认跳转">
                     <span class="confirm-text">Go to Github?</span>
-                    <button class="btn-mini go" @click="goToGithub">Yes 🚀</button>
-                    <button class="btn-mini cancel" @click="githubState.confirming = false">Wait ✋</button>
+                    <button class="btn-mini go" @click="goToGithub" aria-label="确认跳转到 Github">
+                      Yes 🚀
+                    </button>
+                    <button class="btn-mini cancel" @click="githubState.confirming = false" aria-label="取消跳转">
+                      Wait ✋
+                    </button>
                   </div>
 
                 </transition>
@@ -104,41 +109,77 @@
 </template>
 
 <script setup>
-  import { reactive } from 'vue'
+  import { reactive, onBeforeUnmount } from 'vue'
 
   const emailAddress = "cli20220909@gmail.com"
 
-  // 邮箱状态管理
+  // 🚀 优化：邮箱状态管理
   const emailState = reactive({
     revealed: false,
     copied: false
   })
 
-  // Github 状态管理
+  // 🚀 优化：Github 状态管理
   const githubState = reactive({
     confirming: false
   })
 
-  // 复制邮箱逻辑
+  // 🚀 优化：定时器管理，避免内存泄漏
+  let copyTimer = null
+
+  // 🚀 优化：复制邮箱逻辑，改进错误处理和用户反馈
   const copyEmail = async () => {
     try {
-      await navigator.clipboard.writeText(emailAddress)
-      emailState.copied = true
+      // 检查 Clipboard API 是否可用
+      if (!navigator.clipboard) {
+        // 降级方案：使用传统方法
+        const textArea = document.createElement('textarea')
+        textArea.value = emailAddress
+        textArea.style.position = 'fixed'
+        textArea.style.opacity = '0'
+        document.body.appendChild(textArea)
+        textArea.select()
+        document.execCommand('copy')
+        document.body.removeChild(textArea)
+        emailState.copied = true
+      } else {
+        await navigator.clipboard.writeText(emailAddress)
+        emailState.copied = true
+      }
+
+      // 🚀 优化：清理之前的定时器
+      if (copyTimer) {
+        clearTimeout(copyTimer)
+      }
+
       // 2秒后恢复图标
-      setTimeout(() => {
+      copyTimer = setTimeout(() => {
         emailState.copied = false
+        copyTimer = null
       }, 2000)
     } catch (err) {
       console.error('Failed to copy', err)
+      // 🚀 优化：可以添加用户提示
     }
   }
 
-  // 跳转 Github
+  // 🚀 优化：跳转 Github，添加安全检查
   const goToGithub = () => {
-    window.open('https://github.com', '_blank')
-    githubState.confirming = false // 重置状态
+    try {
+      window.open('https://github.com', '_blank', 'noopener,noreferrer')
+      githubState.confirming = false
+    } catch (err) {
+      console.error('Failed to open Github', err)
+    }
   }
 
+  // 🚀 优化：清理定时器，避免内存泄漏
+  onBeforeUnmount(() => {
+    if (copyTimer) {
+      clearTimeout(copyTimer)
+      copyTimer = null
+    }
+  })
 </script>
 
 <style scoped>
@@ -181,17 +222,20 @@
 
   .fade-in {
     animation: fadeInUp 0.8s ease-out;
+    will-change: transform, opacity;
+    /* 🚀 性能优化 */
   }
 
   @keyframes fadeInUp {
     from {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translate3d(0, 30px, 0);
+      /* 🚀 使用 translate3d 启用 GPU 加速 */
     }
 
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate3d(0, 0, 0);
     }
   }
 
@@ -276,11 +320,14 @@
     color: #555;
     border: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
-    transition: transform 0.2s;
+    transition: transform 0.2s ease;
+    will-change: transform;
+    /* 🚀 性能优化 */
   }
 
   .tag:hover {
-    transform: translateY(-2px);
+    transform: translate3d(0, -2px, 0);
+    /* 🚀 使用 translate3d */
     color: #ff9a9e;
   }
 
@@ -322,8 +369,17 @@
   .outline:hover {
     background: #6c5ce7;
     color: white;
-    transform: translateY(-2px);
+    transform: translate3d(0, -2px, 0);
+    /* 🚀 使用 translate3d */
     box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2);
+  }
+
+  /* 🚀 可访问性优化：按钮焦点样式 */
+  .btn-pill:focus-visible,
+  .icon-btn:focus-visible,
+  .btn-mini:focus-visible {
+    outline: 2px solid #6c5ce7;
+    outline-offset: 2px;
   }
 
   /* Email 显示框 */
@@ -404,12 +460,15 @@
   .smooth-switch-enter-active,
   .smooth-switch-leave-active {
     transition: all 0.3s ease;
+    will-change: transform, opacity;
+    /* 🚀 性能优化 */
   }
 
   .smooth-switch-enter-from,
   .smooth-switch-leave-to {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translate3d(0, 10px, 0);
+    /* 🚀 使用 translate3d */
   }
 
   /* 图标弹跳动画 */
@@ -419,15 +478,16 @@
 
   @keyframes popIn {
     0% {
-      transform: scale(0);
+      transform: scale3d(0, 0, 1);
+      /* 🚀 使用 scale3d */
     }
 
     50% {
-      transform: scale(1.4);
+      transform: scale3d(1.4, 1.4, 1);
     }
 
     100% {
-      transform: scale(1);
+      transform: scale3d(1, 1, 1);
     }
   }
 
@@ -443,6 +503,10 @@
   }
 
   @media (max-width: 768px) {
+    .about-page {
+      padding: 30px 5px;
+    }
+
     .glass-card {
       padding: 30px 20px;
     }
@@ -451,10 +515,54 @@
       font-size: 2.5rem;
     }
 
+    .content-body h3 {
+      font-size: 1.3rem;
+    }
+
+    .content-body p {
+      font-size: 1rem;
+    }
+
     .contact-box {
       flex-direction: column;
       gap: 20px;
       align-items: flex-start;
+    }
+
+    .interaction-wrapper {
+      width: 100%;
+    }
+  }
+
+  /* 🚀 可访问性优化：支持减少动画偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+
+    .smooth-switch-enter-active,
+    .smooth-switch-leave-active {
+      transition: none;
+    }
+
+    .smooth-switch-enter-from,
+    .smooth-switch-leave-to {
+      opacity: 1;
+      transform: none;
+    }
+
+    .icon-pop-enter-active {
+      animation: none;
+    }
+
+    .tag:hover {
+      transform: none;
+    }
+
+    .outline:hover {
+      transform: none;
     }
   }
 </style>

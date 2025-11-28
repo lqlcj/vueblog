@@ -7,34 +7,87 @@ import fm from "front-matter";
 export const useBlogStore = defineStore("blog", {
   // 1. state: 相当于组件里的 data
   state: () => ({
-    allPosts: [], // 存放解析好的所有文章
-    isLoaded: false, // 标记是否已经加载过（防止反复读取文件）
+    allPosts: [], // 存放解析好的所有文章（只包含元数据）
+    postContentMap: {}, // 存储文件路径到原始内容的映射（懒加载，用于 PostDetail 页面）
+    contentLoaders: null, // 存储懒加载函数映射
+    isLoaded: false, // 标记是否已经加载过元数据
   }),
 
-  // 2. actions: 相当于组件里的 methods，用来修改数据
+  // 2. getters: 计算属性，用于按需获取文章内容
+  getters: {
+    // 根据文件路径获取文章内容（懒加载）
+    getPostByPath: (state) => {
+      return async (filePath) => {
+        // 如果已经加载过，直接从缓存获取
+        if (state.postContentMap[filePath]) {
+          try {
+            return fm(state.postContentMap[filePath]);
+          } catch (e) {
+            console.error("解析文章内容失败", filePath, e);
+            return null;
+          }
+        }
+
+        // 懒加载：从独立的 chunk 中加载文章内容
+        if (state.contentLoaders && state.contentLoaders[filePath]) {
+          try {
+            const content = await state.contentLoaders[filePath]();
+            state.postContentMap[filePath] = content.default || content;
+            return fm(state.postContentMap[filePath]);
+          } catch (e) {
+            console.error("加载文章内容失败", filePath, e);
+            return null;
+          }
+        }
+
+        return null;
+      };
+    },
+  },
+
+  // 3. actions: 相当于组件里的 methods，用来修改数据
   actions: {
-    // 核心动作：初始化加载文章
+    // 核心动作：初始化加载文章元数据（不加载完整内容，提升性能）
     initPosts() {
       // 如果已经加载过，就直接返回，别浪费性能再去读文件了
       if (this.isLoaded) return;
 
-      console.log("Pinia: 正在从文件系统读取 Markdown...");
+      console.log("Pinia: 正在加载文章元数据...");
 
-      // 这里的逻辑和你之前组件里的一模一样
-      const mdFiles = import.meta.glob("/src/posts/*.md", {
+      // 🚀 性能优化方案：
+      // 1. 使用 eager: true 加载文件用于提取元数据（必须，因为需要 front-matter）
+      // 2. 但只解析 front-matter，不存储完整内容到 postContentMap
+      // 3. 使用 eager: false 创建懒加载映射，将完整内容分离到独立 chunk
+      // 这样初始 bundle 只包含元数据，完整内容按需加载
+
+      // 用于提取元数据（只解析 front-matter，不存储完整内容）
+      const mdFilesForMeta = import.meta.glob("/src/posts/*.md", {
         query: "?raw",
         import: "default",
-        eager: true,
+        eager: true, // 必须 eager，用于提取元数据
+      });
+
+      // 用于懒加载完整内容（分离到独立 chunk）
+      this.contentLoaders = import.meta.glob("/src/posts/*.md", {
+        query: "?raw",
+        import: "default",
+        eager: false, // 懒加载，代码分割
       });
 
       const posts = [];
       let index = 0;
 
-      for (const path in mdFiles) {
-        const content = mdFiles[path];
+      // 只解析 front-matter，提取元数据，不存储完整内容
+      for (const path in mdFilesForMeta) {
+        const content = mdFilesForMeta[path];
         try {
+          // 只解析 front-matter，提取元数据
           const parsed = fm(content);
           const attr = parsed.attributes;
+
+          // ⚠️ 关键：不存储完整内容，只存储元数据
+          // 完整内容通过 contentLoaders 懒加载
+
           posts.push({
             id: index++,
             title: attr.title || "无标题",
@@ -47,7 +100,7 @@ export const useBlogStore = defineStore("blog", {
             likes: attr.likes || 0,
             date: attr.date || "2025-01-01",
             isLiked: false,
-            filePath: path,
+            filePath: path, // 存储原始路径，用于懒加载内容
           });
         } catch (e) {
           console.error("解析失败", path);

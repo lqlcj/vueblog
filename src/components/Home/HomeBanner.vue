@@ -22,16 +22,19 @@
     display: flex;
     justify-content: center;
     animation: dropDown 0.8s ease-out;
+    will-change: transform, opacity;
+    /* 🚀 性能优化 */
   }
 
   @keyframes dropDown {
     from {
-      transform: translateY(-50px);
+      transform: translate3d(0, -50px, 0);
+      /* 🚀 使用 translate3d 启用 GPU 加速 */
       opacity: 0;
     }
 
     to {
-      transform: translateY(0);
+      transform: translate3d(0, 0, 0);
       opacity: 1;
     }
   }
@@ -43,9 +46,11 @@
     text-align: center;
     transform: rotate(-2deg);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
+    transition: transform 0.3s ease;
     max-width: 900px;
     width: 90%;
+    will-change: transform;
+    /* 🚀 性能优化 */
   }
 
   .intro-banner:hover {
@@ -96,6 +101,21 @@
 
     .banner-content h2 {
       font-size: 2.2rem;
+    }
+  }
+
+  /* 🚀 可访问性优化：支持减少动画偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    .note-wrapper {
+      animation: none;
+    }
+
+    .intro-banner {
+      transform: none;
+    }
+
+    .intro-banner:hover {
+      transform: scale(1.02);
     }
   }
 </style>

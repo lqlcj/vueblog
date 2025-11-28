@@ -37,39 +37,46 @@
 <script setup>
   import { ref, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import { useBlogStore } from '@/stores/blogStore';
   // 保持依赖动态导入，解决 820KB bloat 问题
-  import { default as fm } from 'front-matter';
   import { default as MarkdownIt } from 'markdown-it';
 
   const route = useRoute();
   const router = useRouter();
+  const blogStore = useBlogStore();
 
   const post = ref(null);
   const htmlContent = ref('');
 
-  // 🔴 移除：import.meta.glob - 我们不再需要全局索引，只需导入单个文件
-
   onMounted(async () => {
     try {
+      // 确保 store 已初始化（只加载元数据，不加载完整内容）
+      if (!blogStore.isLoaded) {
+        blogStore.initPosts();
+      }
+
       const filePath = route.query.path; // e.g., /src/posts/01.md
 
       if (filePath) {
+        // 🚀 性能优化：懒加载文章内容
+        // getPostByPath 现在是异步的，会按需加载文章内容
+        // 文章内容被分离到独立的 chunk 中，减少首屏加载时间
+        const parsed = await blogStore.getPostByPath(filePath);
 
-        // 1. 🔴 关键修复：直接动态导入单个文件内容
-        // 使用 /* @vite-ignore */ 确保 Vite 将其视为纯动态导入，不进行全局索引冲突
-        const rawContentModule = await import(/* @vite-ignore */ filePath + '?raw');
+        if (!parsed) {
+          console.error("文章未找到:", filePath);
+          router.push('/blog');
+          return;
+        }
 
-        const rawContent = rawContentModule.default;
-
-        // 2. 初始化解析器 (MarkdownIt 和 fm 库已经通过顶部静态导入加载)
+        // 初始化解析器
         const md = new MarkdownIt({
           html: true,
           linkify: true,
           typographer: true
         });
 
-        // 3. 解析和渲染
-        const parsed = fm(rawContent);
+        // 解析和渲染
         post.value = parsed;
         htmlContent.value = md.render(parsed.body);
 

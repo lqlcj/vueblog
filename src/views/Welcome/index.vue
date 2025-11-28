@@ -1,87 +1,113 @@
 <template>
-  <!-- Ghibli-style welcome component with gradient background -->
   <div class="ghibli-container">
-    <!-- Static sky gradient: removed heavy blurred clouds to improve performance -->
     <div class="sky-background"></div>
     <div class="content-scroll">
-      <!-- Hero section -->
-      <section class="section hero-section scroll-item">
-        <div class="hero-content text-center">
-          <h1 class="main-title">
-            <span class="handwritten">Welcome to my</span><br />
-            Digital Garden.
-          </h1>
-          <p class="intro-text">
-            这里没有复杂的代码，只有一些关于创造的故事。<br />
-            回归最纯粹的记录，一个安静记录想法的地方。
-          </p>
-          <div class="scroll-indicator">
-            <span>↓ 向下探索旅程</span>
-          </div>
+      <section ref="heroSection" class="section scroll-item text-center">
+        <h1 class="main-title">
+          <span class="handwritten">Welcome to my</span><br />
+          Digital Garden.
+        </h1>
+        <p class="intro-text">
+          这里没有复杂的代码，只有一些关于创造的故事。<br />
+          回归最纯粹的记录，一个安静记录想法的地方。
+        </p>
+        <div v-show="showScrollIndicator" class="scroll-indicator">
+          <span>↓ 向下探索旅程</span>
         </div>
       </section>
-      <!-- About and Skills sections removed to improve performance -->
-      <!-- Footer / CTA section -->
-      <section class="section footer-section text-center scroll-item">
+      <section ref="footerSection" class="section footer-section text-center scroll-item">
         <h2 class="handwritten end-title">Ready to enter?</h2>
-        <button class="soft-btn" @click="goHome">进入主页 / Enter Home ➞</button>
+        <button class="soft-btn" @click="goHome" aria-label="进入主页">
+          进入主页 / Enter Home ➞
+        </button>
       </section>
     </div>
   </div>
 </template>
 
 <script setup>
-  import { onMounted, onBeforeUnmount } from 'vue'
+  import { ref, onMounted, onBeforeUnmount } from 'vue'
   import { useRouter } from 'vue-router'
 
-  // Router for navigation to the home page
   const router = useRouter()
   const goHome = () => {
     router.push('/home')
   }
 
-  // IntersectionObserver instance used to reveal scroll items when they enter the viewport
+  const heroSection = ref(null)
+  const footerSection = ref(null)
+  const showScrollIndicator = ref(true)
+
   let observer = null
+  let footerObserver = null
 
   onMounted(() => {
-    const items = document.querySelectorAll('.scroll-item')
-    const options = {
-      root: null,
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px',
-    }
-    const callback = (entries, observerInstance) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible')
-          observerInstance.unobserve(entry.target)
+    setTimeout(() => {
+      const items = [heroSection.value, footerSection.value].filter(Boolean)
+
+      if (items.length === 0) return
+
+      const options = {
+        root: null,
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px',
+      }
+
+      const callback = (entries, observerInstance) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible')
+            observerInstance.unobserve(entry.target)
+          }
+        })
+      }
+
+      observer = new IntersectionObserver(callback, options)
+      items.forEach((item) => observer.observe(item))
+
+      if (footerSection.value) {
+        const footerOptions = {
+          root: null,
+          threshold: 0.7,
+          rootMargin: '0px 0px -100px 0px',
         }
-      })
-    }
-    observer = new IntersectionObserver(callback, options)
-    items.forEach((item) => observer.observe(item))
+
+        const footerCallback = (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              showScrollIndicator.value = false
+            } else {
+              showScrollIndicator.value = true
+            }
+          })
+        }
+
+        footerObserver = new IntersectionObserver(footerCallback, footerOptions)
+        footerObserver.observe(footerSection.value)
+      }
+    }, 100)
   })
 
   onBeforeUnmount(() => {
-    // Clean up to avoid memory leaks
-    if (observer) observer.disconnect()
+    if (observer) {
+      observer.disconnect()
+      observer = null
+    }
+    if (footerObserver) {
+      footerObserver.disconnect()
+      footerObserver = null
+    }
   })
 </script>
 
 <style scoped>
-
-  /* Root colour palette (matches original design) */
-  :root {
+  .ghibli-container {
     --ghibli-blue: #a7d0e8;
     --ghibli-cream: #fef9e7;
-    --ghibli-green: #c5e1a5;
     --text-dark: #5d6d7e;
     --text-soft: #8a9a9b;
-  }
 
-  /* Container that holds all sections; huge height for extended scroll effect */
-  .ghibli-container {
-    min-height: 300vh;
+    min-height: 120vh;
     background-color: var(--ghibli-cream);
     color: var(--text-dark);
     font-family: KaiTi SC, STKaiti, KaiTi, 楷体, FangSong, SimSun, serif;
@@ -89,25 +115,15 @@
     position: relative;
   }
 
-  /* Handwritten style used in titles */
   .handwritten {
     font-family: Caveat, cursive;
     color: #34495e;
   }
 
-  /* Center text utility */
   .text-center {
     text-align: center;
   }
 
-  /* Layout container */
-  .container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-
-  /* Fixed gradient sky background; removed blurred clouds for performance */
   .sky-background {
     position: fixed;
     top: 0;
@@ -117,30 +133,30 @@
     background: linear-gradient(to bottom, #d4eaff, #fef9e7 80%);
     z-index: 0;
     overflow: hidden;
+    contain: strict;
+    transform: translateZ(0);
   }
 
-  /* Wrapper for content sections */
   .content-scroll {
     position: relative;
     z-index: 1;
+    contain: layout style;
   }
 
-  /* Generic section styling */
   .section {
-    min-height: 80vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 100px 0;
+    padding: 80px 0;
   }
 
-  /* Section titles */
-  .section-title {
-    font-size: 3rem;
-    margin-bottom: 30px;
+  .footer-section {
+    min-height: 100vh;
+    padding: 80px 0 60px;
+    justify-content: center;
   }
 
-  /* Main hero title */
   .main-title {
     font-size: 4.5rem;
     line-height: 1.2;
@@ -148,13 +164,11 @@
     color: #2c3e50;
   }
 
-  /* Colourful handwritten subheading inside main title */
   .main-title .handwritten {
     font-size: 3.5rem;
     color: #3498db;
   }
 
-  /* Intro text under hero title */
   .intro-text {
     font-size: 1.3rem;
     color: var(--text-dark);
@@ -163,11 +177,15 @@
     line-height: 1.8;
   }
 
-  /* Scroll indicator with bounce animation */
   .scroll-indicator {
     font-size: 1rem;
     color: var(--text-soft);
     animation: bounce 2s infinite;
+    animation-delay: 0.2s;
+    animation-fill-mode: both;
+    transition: opacity 0.6s ease;
+    font-weight: 400;
+    letter-spacing: 1px;
   }
 
   @keyframes bounce {
@@ -177,30 +195,27 @@
     50%,
     80%,
     100% {
-      transform: translateY(0);
+      transform: translate3d(0, 0, 0);
     }
 
     40% {
-      transform: translateY(-10px);
+      transform: translate3d(0, -8px, 0);
     }
 
     60% {
-      transform: translateY(-5px);
+      transform: translate3d(0, -4px, 0);
     }
   }
 
-
-  /* CTA section title */
   .end-title {
     font-size: 4rem;
     margin-bottom: 20px;
   }
 
-  /* Soft button styling */
   .soft-btn {
     margin-top: 30px;
     padding: 15px 40px;
-    background: #a7d0e8;
+    background: var(--ghibli-blue);
     color: #fff;
     border: none;
     border-radius: 50px;
@@ -208,6 +223,7 @@
     cursor: pointer;
     box-shadow: 0 10px 20px -5px #a7d0e880;
     transition: all 0.3s ease;
+    outline: none;
   }
 
   .soft-btn:hover {
@@ -216,10 +232,19 @@
     box-shadow: 0 15px 25px -5px #a7d0e899;
   }
 
-  /* Scroll item animation states */
+  .soft-btn:focus-visible {
+    outline: 2px solid var(--ghibli-blue);
+    outline-offset: 2px;
+  }
+
+  .soft-btn:active {
+    transform: translateY(-1px);
+  }
+
   .scroll-item {
     opacity: 0;
     transform: translateY(40px);
+    contain: layout style paint;
     transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -228,17 +253,21 @@
     transform: translateY(0);
   }
 
-  /* Delay utilities for staggered animations */
-  .delay-100 {
-    transition-delay: 0.1s;
-  }
-
-  .delay-200 {
-    transition-delay: 0.2s;
-  }
-
-  /* Responsive tweaks for small screens */
   @media (max-width: 768px) {
+    .ghibli-container {
+      min-height: 100vh;
+    }
+
+    .section {
+      min-height: 100vh;
+      padding: 40px 0;
+    }
+
+    .footer-section {
+      min-height: auto;
+      padding: 30px 0 15px;
+    }
+
     .main-title {
       font-size: 3rem;
     }
@@ -247,10 +276,36 @@
       font-size: 2.5rem;
     }
 
-    /* Removed rules for split-layout, skills grid, and placeholder art to reflect deleted sections */
+    .intro-text {
+      font-size: 1.1rem;
+      padding: 0 20px;
+    }
+
+    .end-title {
+      font-size: 3rem;
+    }
+
     .soft-btn {
       padding: 12px 30px;
       font-size: 1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-item {
+      transition: none;
+    }
+
+    .scroll-indicator {
+      animation: none;
+    }
+
+    .soft-btn {
+      transition: background-color 0.3s ease;
+    }
+
+    .soft-btn:hover {
+      transform: none;
     }
   }
 </style>

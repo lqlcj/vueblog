@@ -13,9 +13,12 @@
 </template>
 
 <script setup>
-  import HomeBanner from '@/components/Home/HomeBanner.vue'
-  import HomeProfile from '@/components/Home/HomeProfile.vue'
-  import HomeSkills from '@/components/Home/HomeSkills.vue'
+  // 🚀 性能优化：子组件改为异步导入，实现代码分割
+  import { defineAsyncComponent } from 'vue'
+
+  const HomeBanner = defineAsyncComponent(() => import('@/components/Home/HomeBanner.vue'))
+  const HomeProfile = defineAsyncComponent(() => import('@/components/Home/HomeProfile.vue'))
+  const HomeSkills = defineAsyncComponent(() => import('@/components/Home/HomeSkills.vue'))
 </script>
 
 <style scoped>
@@ -44,6 +47,10 @@
     opacity: 0.7;
     animation: float 10s infinite ease-in-out;
     border-radius: 50%;
+    will-change: transform;
+    /* 🚀 性能优化：提示浏览器优化动画 */
+    /* 🚀 性能优化：使用 transform 代替 position，GPU 加速 */
+    transform: translateZ(0);
   }
 
   .shape-1 {
@@ -67,11 +74,12 @@
 
     0%,
     100% {
-      transform: translate(0, 0);
+      transform: translate3d(0, 0, 0);
+      /* 🚀 使用 translate3d 启用 GPU 加速 */
     }
 
     50% {
-      transform: translate(30px, -30px);
+      transform: translate3d(30px, -30px, 0);
     }
   }
 
@@ -91,27 +99,38 @@
   @media (max-width: 768px) {
     .dashboard-page {
       gap: 30px;
-      /* 顶部留白也减小，防止第一屏太空 */
       padding-top: 30px;
     }
 
     .main-container {
       grid-template-columns: 1fr;
-      /* 模块之间的间距也稍微收一点 */
       gap: 30px;
     }
 
-    /* 调整一下光斑位置，防止手机上挡住重要内容 */
+    /* 调整光斑位置，防止手机上挡住重要内容 */
     .shape-1 {
       top: 10%;
       left: -20%;
       opacity: 0.5;
+      width: 200px;
+      /* 🚀 优化：移动端减小光斑大小 */
+      height: 200px;
     }
 
     .shape-2 {
       bottom: 5%;
       right: -20%;
       opacity: 0.5;
+      width: 250px;
+      /* 🚀 优化：移动端减小光斑大小 */
+      height: 250px;
+    }
+  }
+
+  /* 🚀 可访问性优化：支持减少动画偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    .bg-shape {
+      animation: none;
     }
   }
 </style>

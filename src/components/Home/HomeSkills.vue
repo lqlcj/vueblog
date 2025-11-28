@@ -125,7 +125,6 @@
   .grid-card {
     padding: 25px;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    /* 更有弹性的过渡 */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -135,18 +134,21 @@
     /* 初始状态：用于进场动画 */
     opacity: 0;
     animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    will-change: transform, opacity;
+    /* 🚀 性能优化 */
   }
 
   /* 进场动画关键帧 */
   @keyframes slideUpFade {
     from {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translate3d(0, 30px, 0);
+      /* 🚀 使用 translate3d 启用 GPU 加速 */
     }
 
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate3d(0, 0, 0);
     }
   }
 
@@ -179,10 +181,16 @@
 
   /* 悬停整体上浮 */
   .grid-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    /* 微微放大 */
+    transform: translate3d(0, -5px, 0) scale(1.02);
+    /* 🚀 使用 translate3d */
     background: rgba(255, 255, 255, 0.9);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 🚀 可访问性优化：键盘导航支持 */
+  .grid-card:focus-visible {
+    outline: 2px solid #6c5ce7;
+    outline-offset: 2px;
   }
 
   /* 图标容器 (用于做果冻动画) */
@@ -288,10 +296,10 @@
     height: 100%;
     background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%);
     border-radius: 10px;
-    /* 宽度变化动画 */
     transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
     width: 0;
-    /* 初始为 0 */
+    will-change: width;
+    /* 🚀 性能优化 */
   }
 
   .stat-quote {
@@ -300,5 +308,38 @@
     text-align: right;
     margin: 0;
     font-style: italic;
+  }
+
+  /* 🚀 响应式优化：移动端调整 */
+  @media (max-width: 768px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    .delay-4 {
+      grid-column: span 1;
+      /* 移动端不再跨列 */
+    }
+
+    .grid-card {
+      padding: 20px;
+    }
+  }
+
+  /* 🚀 可访问性优化：支持减少动画偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    .grid-card {
+      animation: none;
+      opacity: 1;
+    }
+
+    .progress-fill {
+      transition: none;
+    }
+
+    .grid-card:hover {
+      transform: none;
+    }
   }
 </style>

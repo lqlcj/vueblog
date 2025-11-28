@@ -17,34 +17,63 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, computed } from 'vue'
+  import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
   import { useRouter } from 'vue-router'
 
   const router = useRouter()
 
-  // 打字机逻辑
+  // 🚀 优化：打字机逻辑，使用更清晰的代码格式
   const fullText = "Building for the Web."
   const typedText = ref('')
   let charIndex = 0
-  const typeWriter = () => { if (charIndex < fullText.length) { typedText.value += fullText.charAt(charIndex); charIndex++; setTimeout(typeWriter, 100); } }
-  onMounted(() => { typeWriter() })
+  let typeTimer = null
 
-  // 3D 视差逻辑 (只针对这个卡片自己)
-  const mouseX = ref(0); const mouseY = ref(0);
-  const cardRef = ref(null);
-
-  const handleMouseMove = (e) => {
-    // 获取卡片自身的宽高，而不是整个窗口，这样更精准
-    const rect = cardRef.value.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    mouseX.value = (x - rect.width / 2) / (rect.width / 2);
-    mouseY.value = (y - rect.height / 2) / (rect.height / 2);
+  const typeWriter = () => {
+    if (charIndex < fullText.length) {
+      typedText.value += fullText.charAt(charIndex)
+      charIndex++
+      typeTimer = setTimeout(typeWriter, 100)
+    }
   }
 
-  const cardStyle = computed(() => { return { transform: `perspective(1000px) rotateX(${mouseY.value * -15}deg) rotateY(${mouseX.value * 15}deg)` } })
-  const resetCard = () => { mouseX.value = 0; mouseY.value = 0; }
+  onMounted(() => {
+    typeWriter()
+  })
+
+  // 🚀 优化：清理定时器，避免内存泄漏
+  onBeforeUnmount(() => {
+    if (typeTimer) {
+      clearTimeout(typeTimer)
+      typeTimer = null
+    }
+  })
+
+  // 🚀 优化：3D 视差逻辑，代码格式优化
+  const mouseX = ref(0)
+  const mouseY = ref(0)
+  const cardRef = ref(null)
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.value) return
+
+    // 获取卡片自身的宽高，而不是整个窗口，这样更精准
+    const rect = cardRef.value.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    mouseX.value = (x - rect.width / 2) / (rect.width / 2)
+    mouseY.value = (y - rect.height / 2) / (rect.height / 2)
+  }
+
+  const cardStyle = computed(() => ({
+    transform: `perspective(1000px) rotateX(${mouseY.value * -15}deg) rotateY(${mouseX.value * 15}deg)`,
+    willChange: 'transform' // 🚀 性能优化：提示浏览器优化 3D 变换
+  }))
+
+  const resetCard = () => {
+    mouseX.value = 0
+    mouseY.value = 0
+  }
 </script>
 
 <style scoped>
@@ -65,7 +94,8 @@
     flex-direction: column;
     justify-content: center;
     height: 100%;
-    /* 撑满父容器 */
+    transform-style: preserve-3d;
+    /* 🚀 优化：保持 3D 变换 */
   }
 
   .avatar-placeholder {
@@ -128,6 +158,13 @@
   .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-primary:focus-visible,
+  .btn-ghost:focus-visible {
+    /* 🚀 可访问性优化：键盘导航焦点样式 */
+    outline: 2px solid #2c3e50;
+    outline-offset: 2px;
   }
 
   .btn-ghost {
