@@ -158,7 +158,9 @@
         copyTimer = null
       }, 2000)
     } catch (err) {
-      console.error('Failed to copy', err)
+      if (import.meta.env.DEV) {
+        console.error('Failed to copy', err)
+      }
       // 🚀 优化：可以添加用户提示
     }
   }
@@ -169,7 +171,9 @@
       window.open('https://github.com', '_blank', 'noopener,noreferrer')
       githubState.confirming = false
     } catch (err) {
-      console.error('Failed to open Github', err)
+      if (import.meta.env.DEV) {
+        console.error('Failed to open Github', err)
+      }
     }
   }
 

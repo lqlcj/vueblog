@@ -23,7 +23,9 @@ export const useBlogStore = defineStore("blog", {
           try {
             return fm(state.postContentMap[filePath]);
           } catch (e) {
-            console.error("解析文章内容失败", filePath, e);
+            if (import.meta.env.DEV) {
+              console.error("解析文章内容失败", filePath, e);
+            }
             return null;
           }
         }
@@ -35,7 +37,9 @@ export const useBlogStore = defineStore("blog", {
             state.postContentMap[filePath] = content.default || content;
             return fm(state.postContentMap[filePath]);
           } catch (e) {
-            console.error("加载文章内容失败", filePath, e);
+            if (import.meta.env.DEV) {
+              console.error("加载文章内容失败", filePath, e);
+            }
             return null;
           }
         }
@@ -52,7 +56,9 @@ export const useBlogStore = defineStore("blog", {
       // 如果已经加载过，就直接返回，别浪费性能再去读文件了
       if (this.isLoaded) return;
 
-      console.log("Pinia: 正在加载文章元数据...");
+      if (import.meta.env.DEV) {
+        console.log("Pinia: 正在加载文章元数据...");
+      }
 
       // 🚀 性能优化方案：
       // 1. 使用 eager: true 加载文件用于提取元数据（必须，因为需要 front-matter）
@@ -103,7 +109,9 @@ export const useBlogStore = defineStore("blog", {
             filePath: path, // 存储原始路径，用于懒加载内容
           });
         } catch (e) {
-          console.error("解析失败", path);
+          if (import.meta.env.DEV) {
+            console.error("解析失败", path);
+          }
         }
       }
 

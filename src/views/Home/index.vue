@@ -9,16 +9,25 @@
       <HomeProfile />
       <HomeSkills />
     </div>
+
+    <!-- 留言系统 -->
+    <div class="comments-section">
+      <Giscus v-bind="giscusConfig" />
+    </div>
   </div>
+
 </template>
 
 <script setup>
   // 🚀 性能优化：子组件改为异步导入，实现代码分割
   import { defineAsyncComponent } from 'vue'
+  import Giscus from '@/components/liuyanban/Giscus.vue'
+  import { giscusConfig } from '@/config/giscus'
 
   const HomeBanner = defineAsyncComponent(() => import('@/components/Home/HomeBanner.vue'))
   const HomeProfile = defineAsyncComponent(() => import('@/components/Home/HomeProfile.vue'))
   const HomeSkills = defineAsyncComponent(() => import('@/components/Home/HomeSkills.vue'))
+
 </script>
 
 <style scoped>
@@ -93,6 +102,15 @@
     z-index: 10;
     position: relative;
     padding: 0 20px;
+  }
+
+  /* --- 留言系统区域 --- */
+  .comments-section {
+    max-width: 1000px;
+    width: 100%;
+    padding: 0 20px;
+    z-index: 10;
+    position: relative;
   }
 
   /* --- 📱 手机端适配调整 --- */

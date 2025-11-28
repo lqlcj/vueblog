@@ -64,7 +64,9 @@
         const parsed = await blogStore.getPostByPath(filePath);
 
         if (!parsed) {
-          console.error("文章未找到:", filePath);
+          if (import.meta.env.DEV) {
+            console.error("文章未找到:", filePath);
+          }
           router.push('/blog');
           return;
         }
@@ -84,7 +86,9 @@
         router.push('/blog');
       }
     } catch (e) {
-      console.error("Post loading error:", e);
+      if (import.meta.env.DEV) {
+        console.error("Post loading error:", e);
+      }
       // 遇到错误，直接跳回列表
       router.push('/blog');
     }

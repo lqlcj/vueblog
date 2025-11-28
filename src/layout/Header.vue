@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="logo">
-      <router-link to="/Home">
+      <router-link to="/home">
         <img alt="logo" src="../assets/images/logo.png" />
       </router-link>
     </div>
@@ -10,7 +10,7 @@
       <router-link to="/" class="nav-link" active-class="select">
         Welcome
       </router-link>
-      <router-link to="/Home" class="nav-link" active-class="select">
+      <router-link to="/home" class="nav-link" active-class="select">
         Home
       </router-link>
       <router-link to="/blog" class="nav-link" active-class="select">
