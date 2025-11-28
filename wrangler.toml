@@ -1,7 +1,6 @@
-{
-  "name": "vueblog",
-  "compatibility_date": "2024-11-28",
-  "assets": {
-    "directory": "./dist/client/"
-  }
-}
+name = "vueblog"
+compatibility_date = "2025-11-28"
+
+[build]
+  command = "npm run build"
+  upload = { dir = "./dist/client" }
