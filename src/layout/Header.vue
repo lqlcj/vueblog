@@ -28,12 +28,6 @@
             <router-link to="/market" class="dropdown-item" @click="closeMarketMenu">
               Market
             </router-link>
-            <router-link to="/market/tools" class="dropdown-item" @click="closeMarketMenu">
-              Tools
-            </router-link>
-            <router-link to="/market/collect" class="dropdown-item" @click="closeMarketMenu">
-              Collect
-            </router-link>
           </div>
         </transition>
       </div>
@@ -47,109 +41,65 @@
 </template>
 
 <script setup>
-  import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+  import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
   import { useRoute } from 'vue-router'
-
-  // 控制 Market 下拉菜单显示
-  const showMarketMenu = ref(false)
-  const isMobile = ref(false)
-  let closeTimer = null
 
   const route = useRoute()
 
-  // 检测是否为移动端
+  const isMobile = ref(false)
+  const showMarketMenu = ref(false)
+
   const checkMobile = () => {
     isMobile.value = window.innerWidth <= 768
+    if (!isMobile.value) {
+      showMarketMenu.value = false
+    }
   }
 
-  // PC 端鼠标悬停处理
+  const marketLabel = computed(() => 'Market')
+
+  const isMarketGroupActive = computed(() => route.path.startsWith('/market'))
+
   const handleMouseEnter = () => {
     if (!isMobile.value) {
-      // 清除关闭定时器
-      if (closeTimer) {
-        clearTimeout(closeTimer)
-        closeTimer = null
-      }
       showMarketMenu.value = true
     }
   }
 
   const handleMouseLeave = () => {
     if (!isMobile.value) {
-      // 延迟关闭，给鼠标移动到下拉菜单的时间
-      closeTimer = setTimeout(() => {
-        showMarketMenu.value = false
-        closeTimer = null
-      }, 150)
-    }
-  }
-
-  // 下拉菜单鼠标进入，保持打开
-  const handleDropdownEnter = () => {
-    if (!isMobile.value) {
-      // 清除关闭定时器
-      if (closeTimer) {
-        clearTimeout(closeTimer)
-        closeTimer = null
-      }
-      showMarketMenu.value = true
-    }
-  }
-
-  // 下拉菜单鼠标离开，关闭菜单
-  const handleDropdownLeave = () => {
-    if (!isMobile.value) {
       showMarketMenu.value = false
     }
   }
 
-  // 移动端点击切换菜单
+  const handleDropdownEnter = handleMouseEnter
+  const handleDropdownLeave = handleMouseLeave
+
   const toggleMarketMenu = () => {
     if (isMobile.value) {
       showMarketMenu.value = !showMarketMenu.value
     }
   }
 
-  // 关闭菜单
   const closeMarketMenu = () => {
     showMarketMenu.value = false
   }
 
-  // 点击外部区域关闭菜单
-  const handleClickOutside = (event) => {
-    if (isMobile.value && showMarketMenu.value) {
-      const dropdown = event.target.closest('.nav-item-dropdown')
-      if (!dropdown) {
-        showMarketMenu.value = false
-      }
-    }
-  }
-
-  // 根据当前路由动态显示 Market 文案
-  const marketLabel = computed(() => {
-    if (route.name === 'Tools') return 'Tools'
-    if (route.name === 'Collect') return 'Collect'
-    return 'Market'
-  })
-
-  // 只要在 /market 相关路由下，顶部 Market 分组高亮
-  const isMarketGroupActive = computed(() => route.path.startsWith('/market'))
-
   onMounted(() => {
     checkMobile()
     window.addEventListener('resize', checkMobile)
-    document.addEventListener('click', handleClickOutside)
   })
 
   onBeforeUnmount(() => {
     window.removeEventListener('resize', checkMobile)
-    document.removeEventListener('click', handleClickOutside)
-    // 清理定时器
-    if (closeTimer) {
-      clearTimeout(closeTimer)
-      closeTimer = null
-    }
   })
+
+  watch(
+    () => route.path,
+    () => {
+      showMarketMenu.value = false
+    }
+  )
 </script>
 
 <style scoped>

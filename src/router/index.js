@@ -7,8 +7,6 @@ import Welcome from "@/views/Welcome/index.vue";
 const Home = () => import("@/views/Home/index.vue");
 const Blog = () => import("@/views/Blog/index.vue");
 const Market = () => import("@/views/Market/index.vue");
-const Tools = () => import("@/views/Market/child/Tools.vue");
-const Collect = () => import("@/views/Market/child/Collect.vue");
 const About = () => import("@/views/About/index.vue");
 const PostDetail = () => import("@/views/Blog/PostDetail.vue");
 
@@ -32,16 +30,6 @@ const routes = [
     path: "/market",
     name: "Market",
     component: Market,
-  },
-  {
-    path: "/market/tools",
-    name: "Tools",
-    component: Tools,
-  },
-  {
-    path: "/market/collect",
-    name: "Collect",
-    component: Collect,
   },
   // 【新增】配置文章详情页路由
   // 当访问 /post?path=xxx 时，显示这个页面
