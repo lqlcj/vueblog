@@ -3,10 +3,8 @@
 
   <div class="xhs-container" ref="containerRef">
 
-    <div class="notes-header fade-in-up">
-      <h2 class="handwritten">My Stories</h2>
-      <p class="subtitle">记录生活，探索代码</p>
-    </div>
+    <!-- 使用可复用的页面标题组件 -->
+    <PageHeader title="My Stories" subtitle="记录生活，探索代码" />
 
     <div class="waterfall-box">
       <div v-for="(item, index) in currentDisplayData" :key="item.id" class="card glass-card pop-in"
@@ -53,6 +51,8 @@
   import { useNotesStore } from '@/stores/notesStore';
   import defaultCover from '@/assets/images/loading.jpg';
   import defaultAvatar from '@/assets/images/home/avatar.jpg';
+  // 导入可复用的页面标题组件
+  import PageHeader from '@/components/HeaderBar/PageHeader.vue';
 
   const router = useRouter();
   const notesStore = useNotesStore();
@@ -122,24 +122,7 @@
     box-sizing: border-box;
   }
 
-  .notes-header {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #5d4037;
-  }
-
-  .handwritten {
-    font-family: 'Caveat', cursive;
-    font-size: 3rem;
-    margin: 0;
-  }
-
-  .subtitle {
-    font-size: 1rem;
-    color: #888;
-    margin-top: 5px;
-    letter-spacing: 2px;
-  }
+  /* 标题样式已移至 PageHeader 组件中，此处不再需要 */
 
   /* 瀑布流布局 */
   .waterfall-box {
@@ -270,10 +253,7 @@
     animation: slideUpFade 0.6s ease-out forwards;
   }
 
-  .fade-in-up {
-    opacity: 0;
-    animation: slideUpFade 0.8s ease-out forwards;
-  }
+  /* fade-in-up 动画已移至 PageHeader 组件中，但保留 keyframes 供 pop-in 使用 */
 
   @keyframes slideUpFade {
     from {
@@ -338,9 +318,7 @@
       column-gap: 10px;
     }
 
-    .handwritten {
-      font-size: 2.2rem;
-    }
+    /* .handwritten 样式已移至 PageHeader 组件中 */
 
     .xhs-container {
       padding: 20px 5px;

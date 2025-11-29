@@ -20,13 +20,13 @@
 <script setup>
   // 🚀 性能优化：留言板异步加载，其他组件直接导入
   import { defineAsyncComponent, onMounted, nextTick, ref } from 'vue'
-  import HomeBanner from '@/components/Home/HomeBanner.vue'
-  import HomeProfile from '@/components/Home/HomeProfile.vue'
+  import HomeBanner from './components/HomeBanner.vue'
+  import HomeProfile from './components/HomeProfile.vue'
   import { giscusConfig } from '@/config/giscus'
   import { useConfetti } from '@/composables/useConfetti'
 
   // 留言板异步加载，确保在其他组件加载完成后再加载
-  const Giscus = defineAsyncComponent(() => import('@/components/liuyanban/Giscus.vue'))
+  const Giscus = defineAsyncComponent(() => import('@/components/Comments/Giscus.vue'))
 
   const { birthday } = useConfetti()
 

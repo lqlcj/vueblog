@@ -18,13 +18,6 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-      },
-    },
-  },
   build: {
     // 🚀 性能优化：代码分割配置
     rollupOptions: {
