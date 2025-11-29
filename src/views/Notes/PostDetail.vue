@@ -8,8 +8,8 @@
       <div v-if="post" class="article-wrapper glass-card">
 
         <div class="article-content">
-          <div v-if="post.attributes.cover" class="cover-img">
-            <img :src="post.attributes.cover" alt="cover" />
+          <div v-if="coverSrc" class="cover-img">
+            <img :src="coverSrc" alt="cover" />
           </div>
 
           <h1 class="main-title">{{ post.attributes.title }}</h1>
@@ -35,24 +35,26 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, computed } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { useBlogStore } from '@/stores/blogStore';
+  import { useNotesStore } from '@/stores/notesStore';
+  import defaultCover from '@/assets/images/loading.jpg';
   // 保持依赖动态导入，解决 820KB bloat 问题
   import { default as MarkdownIt } from 'markdown-it';
 
   const route = useRoute();
   const router = useRouter();
-  const blogStore = useBlogStore();
+  const notesStore = useNotesStore();
 
   const post = ref(null);
   const htmlContent = ref('');
+  const coverSrc = computed(() => post.value?.attributes.cover || defaultCover);
 
   onMounted(async () => {
     try {
       // 确保 store 已初始化（只加载元数据，不加载完整内容）
-      if (!blogStore.isLoaded) {
-        blogStore.initPosts();
+      if (!notesStore.isLoaded) {
+        notesStore.initPosts();
       }
 
       const filePath = route.query.path; // e.g., /src/posts/01.md
@@ -61,11 +63,11 @@
         // 🚀 性能优化：懒加载文章内容
         // getPostByPath 现在是异步的，会按需加载文章内容
         // 文章内容被分离到独立的 chunk 中，减少首屏加载时间
-        const parsed = await blogStore.getPostByPath(filePath);
+        const parsed = await notesStore.getPostByPath(filePath);
 
         if (!parsed) {
           console.error("文章未找到:", filePath);
-          router.push('/blog');
+          router.push('/notes');
           return;
         }
 
@@ -81,12 +83,12 @@
         htmlContent.value = md.render(parsed.body);
 
       } else {
-        router.push('/blog');
+        router.push('/notes');
       }
     } catch (e) {
       console.error("Post loading error:", e);
       // 遇到错误，直接跳回列表
-      router.push('/blog');
+      router.push('/notes');
     }
   });
 

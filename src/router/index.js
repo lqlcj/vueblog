@@ -5,10 +5,10 @@ import Welcome from "@/views/Welcome/index.vue";
 
 // 🚀 性能优化：其他路由使用懒加载
 const Home = () => import("@/views/Home/index.vue");
-const Blog = () => import("@/views/Blog/index.vue");
+const Notes = () => import("@/views/Notes/index.vue");
 const Market = () => import("@/views/Market/index.vue");
 const About = () => import("@/views/About/index.vue");
-const PostDetail = () => import("@/views/Blog/PostDetail.vue");
+const PostDetail = () => import("@/views/Notes/PostDetail.vue");
 
 const routes = [
   {
@@ -22,9 +22,9 @@ const routes = [
     component: Home,
   },
   {
-    path: "/blog",
-    name: "Blog",
-    component: Blog,
+    path: "/notes",
+    name: "Notes",
+    component: Notes,
   },
   {
     path: "/market",

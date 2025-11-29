@@ -4,7 +4,7 @@
 
     <div class="main-content">
       <router-view v-slot="{ Component }">
-        <keep-alive include="Blog">
+        <keep-alive include="Notes">
           <component :is="Component" />
         </keep-alive>
       </router-view>

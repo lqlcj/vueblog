@@ -1,9 +1,9 @@
 <template>
-  <div class="blog-bg-layer"></div>
+  <div class="notes-bg-layer"></div>
 
   <div class="xhs-container" ref="containerRef">
 
-    <div class="blog-header fade-in-up">
+    <div class="notes-header fade-in-up">
       <h2 class="handwritten">My Stories</h2>
       <p class="subtitle">记录生活，探索代码</p>
     </div>
@@ -50,20 +50,22 @@
 <script setup>
   import { ref, computed, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
-  import { useBlogStore } from '@/stores/blogStore';
+  import { useNotesStore } from '@/stores/notesStore';
+  import defaultCover from '@/assets/images/loading.jpg';
+  import defaultAvatar from '@/assets/images/home/avatar.jpg';
 
   const router = useRouter();
-  const blogStore = useBlogStore();
+  const notesStore = useNotesStore();
 
   const containerRef = ref(null);
   const currentPage = ref(1);
   const PAGE_SIZE = 12;
 
   onMounted(() => {
-    blogStore.initPosts();
+    notesStore.initPosts();
   });
 
-  const allData = computed(() => blogStore.allPosts);
+  const allData = computed(() => notesStore.allPosts);
 
   // 🔴 视觉逻辑：定义比例模式，制造瀑布流的错落感
   const ratioPattern = [0.75, 1.0, 0.75, 1.33, 0.6, 0.75, 1.0];
@@ -76,7 +78,9 @@
     return pageData.map((item, index) => {
       // 注入 visualRatio (如果数据源里没有，就按顺序派发一个)
       const visualRatio = item.aspectRatio || ratioPattern[index % ratioPattern.length];
-      return { ...item, visualRatio };
+      const avatar = item.avatar || defaultAvatar;
+      const img = item.img || defaultCover;
+      return { ...item, visualRatio, avatar, img };
     });
   });
 
@@ -99,7 +103,7 @@
 
 <style scoped>
 
-  .blog-bg-layer {
+  .notes-bg-layer {
     position: fixed;
     top: 0;
     left: 0;
@@ -118,7 +122,7 @@
     box-sizing: border-box;
   }
 
-  .blog-header {
+  .notes-header {
     text-align: center;
     margin-bottom: 30px;
     color: #5d4037;
@@ -154,6 +158,7 @@
     transition: all 0.3s ease;
     border: 1px solid rgba(0, 0, 0, 0.02);
     -webkit-mask-image: -webkit-radial-gradient(white, black);
+    mask-image: radial-gradient(circle, #fff, #000);
   }
 
   .glass-card:hover {
@@ -226,6 +231,7 @@
     font-weight: 500;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }

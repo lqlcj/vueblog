@@ -10,27 +10,13 @@
       <router-link to="/Home" class="nav-link" active-class="select">
         Home
       </router-link>
-      <router-link to="/blog" class="nav-link" active-class="select">
-        Blog
+      <router-link to="/notes" class="nav-link" active-class="select">
+        Notes
       </router-link>
 
-      <!-- Market 多级菜单入口 -->
-      <div class="nav-item-dropdown" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
-        <router-link v-if="!isMobile" to="/market" class="nav-link" :class="{ select: isMarketGroupActive }">
-          {{ marketLabel }}
-        </router-link>
-        <span v-else class="nav-link" :class="{ select: isMarketGroupActive }" @click.stop="toggleMarketMenu">
-          {{ marketLabel }}
-        </span>
-        <transition name="fade">
-          <div v-if="showMarketMenu" class="dropdown-menu" @click.stop @mouseenter="handleDropdownEnter"
-            @mouseleave="handleDropdownLeave">
-            <router-link to="/market" class="dropdown-item" @click="closeMarketMenu">
-              Market
-            </router-link>
-          </div>
-        </transition>
-      </div>
+      <router-link to="/market" class="nav-link" :class="{ select: isMarketGroupActive }">
+        Market
+      </router-link>
 
       <router-link to="/about" class="nav-link" active-class="select">
         About
@@ -41,65 +27,12 @@
 </template>
 
 <script setup>
-  import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+  import { computed } from 'vue'
   import { useRoute } from 'vue-router'
 
   const route = useRoute()
 
-  const isMobile = ref(false)
-  const showMarketMenu = ref(false)
-
-  const checkMobile = () => {
-    isMobile.value = window.innerWidth <= 768
-    if (!isMobile.value) {
-      showMarketMenu.value = false
-    }
-  }
-
-  const marketLabel = computed(() => 'Market')
-
   const isMarketGroupActive = computed(() => route.path.startsWith('/market'))
-
-  const handleMouseEnter = () => {
-    if (!isMobile.value) {
-      showMarketMenu.value = true
-    }
-  }
-
-  const handleMouseLeave = () => {
-    if (!isMobile.value) {
-      showMarketMenu.value = false
-    }
-  }
-
-  const handleDropdownEnter = handleMouseEnter
-  const handleDropdownLeave = handleMouseLeave
-
-  const toggleMarketMenu = () => {
-    if (isMobile.value) {
-      showMarketMenu.value = !showMarketMenu.value
-    }
-  }
-
-  const closeMarketMenu = () => {
-    showMarketMenu.value = false
-  }
-
-  onMounted(() => {
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-  })
-
-  onBeforeUnmount(() => {
-    window.removeEventListener('resize', checkMobile)
-  })
-
-  watch(
-    () => route.path,
-    () => {
-      showMarketMenu.value = false
-    }
-  )
 </script>
 
 <style scoped>
@@ -170,80 +103,6 @@
     text-decoration: none;
   }
 
-  /* Market 下拉菜单（PC 端） */
-  .nav-item-dropdown {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    /* 确保下拉菜单容器不影响其他导航项的布局 */
-    flex-shrink: 0;
-    justify-content: center;
-  }
-
-  .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    margin-top: 10px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-    min-width: 160px;
-    max-width: 200px;
-    padding: 8px 0;
-    z-index: 1000;
-    /* 确保下拉菜单不影响父容器布局 */
-    pointer-events: auto;
-    /* 防止抖动：使用 will-change 和 transform3d 优化 */
-    will-change: transform, opacity;
-    transform: translateZ(0);
-    /* 确保下拉菜单完全脱离文档流，不影响布局 */
-    isolation: isolate;
-  }
-
-  .dropdown-item {
-    display: block;
-    padding: 10px 20px;
-    font-size: 14pt;
-    font-family: 'Conv_FuturaStd-Medium', Arial;
-    color: #68525B;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    /* 防止文本换行影响布局 */
-    box-sizing: border-box;
-  }
-
-  .dropdown-item:hover {
-    background: rgba(224, 195, 252, 0.1);
-    color: #E45462;
-  }
-
-  .dropdown-item.router-link-active {
-    color: #E45462;
-    background: rgba(224, 195, 252, 0.15);
-  }
-
-  /* 下拉菜单动画 */
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-
-  .fade-enter-from,
-  .fade-leave-to {
-    opacity: 0;
-    transform: translate3d(0, -10px, 0);
-  }
-
-  .fade-enter-to,
-  .fade-leave-from {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-
   /* --- 📱 核心修改：手机端适配 --- */
   /* 当屏幕宽度小于 768px (手机/平板竖屏) 时，覆盖上面的样式 */
   @media (max-width: 768px) {
@@ -292,30 +151,6 @@
       margin: 0 10px;
     }
 
-    /* 移动端下拉菜单：不改变导航高度，仅作为弹出层显示 */
-    .nav-item-dropdown {
-      margin: 0 10px;
-    }
-
-    .dropdown-menu {
-      left: 50%;
-      transform: translate3d(-50%, 0, 0);
-      margin-top: 6px;
-      min-width: 140px;
-      /* 移动端下拉菜单宽度更窄一点 */
-      padding: 6px 0;
-    }
-
-    /* 移动端动画优化 */
-    .fade-enter-from,
-    .fade-leave-to {
-      transform: translate3d(-50%, -10px, 0);
-    }
-
-    .fade-enter-to,
-    .fade-leave-from {
-      transform: translate3d(-50%, 0, 0);
-    }
   }
 
 </style>

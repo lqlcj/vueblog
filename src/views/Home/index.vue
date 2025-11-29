@@ -6,11 +6,11 @@
     <HomeBanner />
 
     <div class="main-container">
-      <HomeProfile />
+      <HomeProfile @scroll-to-comments="scrollToComments" />
     </div>
 
     <!-- 留言系统 -->
-    <div class="comments-section">
+    <div class="comments-section" ref="commentsSectionRef" id="comments">
       <Giscus v-bind="giscusConfig" />
     </div>
   </div>
@@ -19,7 +19,7 @@
 
 <script setup>
   // 🚀 性能优化：留言板异步加载，其他组件直接导入
-  import { defineAsyncComponent, onMounted, nextTick } from 'vue'
+  import { defineAsyncComponent, onMounted, nextTick, ref } from 'vue'
   import HomeBanner from '@/components/Home/HomeBanner.vue'
   import HomeProfile from '@/components/Home/HomeProfile.vue'
   import { giscusConfig } from '@/config/giscus'
@@ -31,6 +31,14 @@
   const { birthday } = useConfetti()
 
   // 等待所有组件加载完成后触发生日效果
+  const commentsSectionRef = ref(null)
+
+  const scrollToComments = () => {
+    if (commentsSectionRef.value) {
+      commentsSectionRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   onMounted(async () => {
     // 等待所有异步组件加载完成
     await nextTick()

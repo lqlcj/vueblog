@@ -6,12 +6,23 @@
       <div class="tape-left"></div>
       <div class="tape-right"></div>
       <div class="banner-content">
-        <h2 class="handwritten">Good Morning, Traveler.</h2>
+        <h2 class="handwritten">{{ greeting }}</h2>
         <p>欢迎回到小屋。进来喝杯咖啡吧。</p>
       </div>
     </section>
   </div>
 </template>
+
+<script setup>
+  const getGreeting = () => {
+    const hour = new Date().getHours()
+    if (hour < 12) return 'Good morning, Traveler.'
+    if (hour < 18) return 'Good afternoon, Traveler.'
+    return 'Good evening, Traveler.'
+  }
+
+  const greeting = getGreeting()
+</script>
 
 <style scoped>
 

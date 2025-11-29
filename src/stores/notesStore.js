@@ -2,9 +2,11 @@
 
 import { defineStore } from "pinia";
 import fm from "front-matter";
+import defaultCover from "@/assets/images/loading.jpg";
+import defaultAvatar from "@/assets/images/home/avatar.jpg";
 
-// 定义一个仓库，名字叫 'blog'
-export const useBlogStore = defineStore("blog", {
+// Notes 数据仓库
+export const useNotesStore = defineStore("notes", {
   // 1. state: 相当于组件里的 data
   state: () => ({
     allPosts: [], // 存放解析好的所有文章（只包含元数据）
@@ -91,12 +93,10 @@ export const useBlogStore = defineStore("blog", {
           posts.push({
             id: index++,
             title: attr.title || "无标题",
-            img: attr.cover || "https://picsum.photos/400/300",
+            img: attr.cover || defaultCover,
             aspectRatio: attr.ratio || 0.75,
             user: attr.user || "lcj",
-            avatar:
-              attr.avatar ||
-              "https://api.dicebear.com/7.x/miniavs/svg?seed=admin",
+            avatar: attr.avatar || defaultAvatar,
             likes: attr.likes || 0,
             date: attr.date || "2025-01-01",
             isLiked: false,

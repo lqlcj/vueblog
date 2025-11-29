@@ -14,20 +14,22 @@
       @mousemove="handleMouseMove">
       <div class="card-content">
         <!-- 头像占位符 -->
-        <div class="avatar-placeholder">👨‍💻</div>
+        <div class="avatar-wrapper">
+          <img :src="heroAvatar" alt="个人头像" class="avatar-img" />
+        </div>
 
         <!-- 名字标题 -->
-        <h1 class="name">Creator.</h1>
+        <h1 class="name">Hello, I'm LCJ.</h1>
 
-        <!-- 打字机效果：动态显示 "Building for the Web." -->
-        <p class="role-text">I am <span class="typing-cursor">{{ typedText }}</span></p>
+        <!-- 打字机效果：动态显示 -->
+        <p class="role-text">喜欢 <span class="typing-cursor">{{ typedText }}</span></p>
 
         <!-- 个人简介 -->
-        <p class="bio">热衷于构建极致体验的 Web 应用。<br>设计与代码的混合体。</p>
+        <p class="bio">白天写代码，晚上写点文字。<br>循序慢行，给生活加一点设计感。</p>
 
         <!-- 操作按钮 -->
         <div class="action-buttons">
-          <button class="btn-primary" @click="$router.push('/blog')">阅读博客</button>
+          <button class="btn-primary" @click="$router.push('/notes')">阅读笔记</button>
           <button class="btn-ghost" @click="$router.push('/about')">关于我</button>
         </div>
       </div>
@@ -37,7 +39,8 @@
     <!-- 功能：展示网站主要功能入口，包含动画效果和交互 -->
     <div class="dashboard-grid">
       <!-- 文章卡片 -->
-      <div class="grid-card glass-panel pointer delay-1" @click="router.push('/blog')">
+      <div class="grid-card glass-panel pointer delay-1" :class="{ 'is-activating': activeCard === 'notes' }"
+        @click="handleCardClick('notes', () => router.push('/notes'))">
         <div class="icon-wrapper">
           <div class="icon-box">📝</div>
         </div>
@@ -49,7 +52,8 @@
       </div>
 
       <!-- 关于卡片 -->
-      <div class="grid-card glass-panel pointer delay-2" @click="router.push('/about')">
+      <div class="grid-card glass-panel pointer delay-2" :class="{ 'is-activating': activeCard === 'about' }"
+        @click="handleCardClick('about', () => router.push('/about'))">
         <div class="icon-wrapper">
           <div class="icon-box">🙋</div>
         </div>
@@ -61,7 +65,8 @@
       </div>
 
       <!-- 留言卡片 -->
-      <div class="grid-card glass-panel pointer delay-3" @click="router.push('/home#comments')">
+      <div class="grid-card glass-panel pointer delay-3" :class="{ 'is-activating': activeCard === 'comments' }"
+        @click="handleCardClick('comments', () => emit('scroll-to-comments'))">
         <div class="icon-wrapper">
           <div class="icon-box">💬</div>
         </div>
@@ -91,8 +96,23 @@
 <script setup>
   import { ref, onMounted, computed } from 'vue'
   import { useRouter } from 'vue-router'
+  import heroAvatar from '@/assets/images/home/avatar.jpg'
 
   const router = useRouter()
+  const emit = defineEmits(['scroll-to-comments'])
+  const activeCard = ref(null)
+
+  /**
+   * 统一的卡片点击动效：先触发微交互，再执行对应动作
+   */
+  const handleCardClick = (key, callback) => {
+    if (activeCard.value) return
+    activeCard.value = key
+    setTimeout(() => {
+      callback?.()
+      activeCard.value = null
+    }, 220)
+  }
 
   // ========== 打字机效果逻辑 ==========
   // 功能：逐字显示文本，营造动态效果
@@ -209,18 +229,31 @@
     transform-style: preserve-3d;
   }
 
-  .avatar-placeholder {
-    font-size: 3rem;
-    margin-bottom: 15px;
+  .avatar-wrapper {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 2px solid rgba(44, 62, 80, 0.1);
+    box-shadow: 0 10px 30px rgba(31, 38, 135, 0.12);
+  }
+
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .name {
-    font-size: 2.5rem;
-    font-weight: 900;
+    font-size: 2.4rem;
+    font-weight: 400;
     margin: 0;
     color: #2c3e50;
     line-height: 1.1;
-    letter-spacing: -1px;
+    letter-spacing: 2px;
+    font-family: 'Caveat', 'Conv_FuturaStd-Book', cursive;
   }
 
   .role-text {
@@ -302,9 +335,30 @@
     overflow: hidden;
   }
 
+  .grid-card.is-activating {
+    animation: card-press 0.35s ease forwards;
+  }
+
   .grid-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 40px rgba(31, 38, 135, 0.1);
+  }
+
+  @keyframes card-press {
+    0% {
+      transform: translateY(0) scale(1);
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+    }
+
+    50% {
+      transform: translateY(4px) scale(0.97);
+      box-shadow: 0 4px 20px rgba(31, 38, 135, 0.08);
+    }
+
+    100% {
+      transform: translateY(0) scale(1);
+      box-shadow: 0 12px 40px rgba(31, 38, 135, 0.1);
+    }
   }
 
   .pointer {
@@ -449,11 +503,12 @@
     }
 
     .name {
-      font-size: 2rem;
+      font-size: 2.1rem;
     }
 
-    .avatar-placeholder {
-      font-size: 2.5rem;
+    .avatar-wrapper {
+      width: 64px;
+      height: 64px;
     }
   }
 </style>
