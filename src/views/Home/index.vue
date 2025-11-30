@@ -28,6 +28,11 @@
     <div class="comments-section" ref="commentsSectionRef" id="comments">
       <Giscus v-bind="giscusConfig" />
     </div>
+
+    <!-- 友链交换 -->
+    <div class="friends-section-wrapper">
+      <FriendsSection />
+    </div>
   </div>
 
 </template>
@@ -40,6 +45,7 @@
   import InfoCards from './components/InfoCards.vue'
   import Greeting from './components/Greeting.vue'
   import ImpressionCarousel from './components/ImpressionCarousel.vue'
+  import FriendsSection from '@/components/Friends/FriendsSection.vue'
   import { giscusConfig } from '@/config/giscus'
   import { layoutConfig } from '@/config/layout'
   import { useConfetti } from '@/composables/useConfetti'
@@ -177,6 +183,15 @@
     position: relative;
   }
 
+  /* --- 友链交换区域 --- */
+  .friends-section-wrapper {
+    max-width: v-bind('layoutConfig.contentMaxWidth');
+    width: 100%;
+    padding: 0 v-bind('layoutConfig.contentPadding');
+    z-index: 10;
+    position: relative;
+  }
+
   /* --- 📱 手机端适配调整 --- */
   @media (max-width: 768px) {
     .dashboard-page {
@@ -199,6 +214,10 @@
     .greeting-section {
       padding: 0 v-bind('layoutConfig.contentPaddingMobile');
       margin: -15px 0;
+    }
+
+    .friends-section-wrapper {
+      padding: 0 v-bind('layoutConfig.contentPaddingMobile');
     }
 
     /* 调整光斑位置，防止手机上挡住重要内容 */

@@ -30,7 +30,10 @@
 
     <!-- 版权声明 -->
     <div class="copyright-section">
-      <p class="copyright-text">© Copyright 2019-2025 『Leyili』 All rights reserved.</p>
+      <p class="copyright-text">
+        © Copyright 2019-2025 『Leyili』 All rights reserved.
+        <a href="https://icp.gov.moe/?keyword=20252209" target="_blank" class="icp-link">萌ICP备20252209号</a>
+      </p>
     </div>
   </footer>
 </template>
@@ -179,6 +182,18 @@
     letter-spacing: 1px;
   }
 
+  .icp-link {
+    margin-left: 12px;
+    color: #68525B;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .icp-link:hover {
+    color: #D94851;
+    text-decoration: underline;
+  }
+
   /* --- 📱 手机端适配 (Media Query) --- */
   @media (max-width: 768px) {
     .footer-content {
@@ -221,6 +236,11 @@
       font-size: 12px;
       white-space: normal;
       /* 移动端允许换行 */
+    }
+
+    .icp-link {
+      margin-left: 8px;
+      display: inline-block;
     }
   }
 </style>
