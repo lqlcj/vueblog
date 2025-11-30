@@ -1,5 +1,7 @@
 <template>
   <footer class="footer-container">
+
+
     <div class="footer-content">
 
       <div class="left-section">
@@ -13,6 +15,8 @@
         </div>
       </div>
 
+      <HomeBanner class="home-banner-container" />
+
       <div class="right-section">
         <div class="social-row">
           <!-- <a href="#" target="_blank" class="social-btn facebook">FACEBOOK</a> -->
@@ -23,13 +27,17 @@
       </div>
 
     </div>
+
+    <!-- 版权声明 -->
+    <div class="copyright-section">
+      <p class="copyright-text">© Copyright 2019-2025 『Leyili』 All rights reserved.</p>
+    </div>
   </footer>
 </template>
 
-<script>
-  export default {
-    name: 'Footer',
-  };
+<script setup>
+  import HomeBanner from '@/views/Home/components/HomeBanner.vue'
+
 </script>
 
 <style scoped>
@@ -57,6 +65,12 @@
     gap: 40px;
     /* 左右两块之间的间距 */
   }
+
+  .home-banner-container {
+    width: 30%;
+  }
+
+
 
   /* --- 左侧区域 --- */
   .left-section {
@@ -101,6 +115,10 @@
     /* 增加一点交互反馈 */
   }
 
+  .home-banner-container {
+    width: 25%;
+  }
+
   /* --- 右侧区域 --- */
   .right-section {
     display: flex;
@@ -143,6 +161,24 @@
     letter-spacing: 2px;
   }
 
+  /* 版权声明区域 */
+  .copyright-section {
+    max-width: 1100px;
+    margin: 30px auto 0;
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(104, 82, 91, 0.2);
+  }
+
+  .copyright-text {
+    font-family: 'Conv_FuturaStd-Medium', Arial, sans-serif;
+    font-size: 14px;
+    color: #68525B;
+    margin: 0;
+    white-space: nowrap;
+    letter-spacing: 1px;
+  }
+
   /* --- 📱 手机端适配 (Media Query) --- */
   @media (max-width: 768px) {
     .footer-content {
@@ -152,6 +188,10 @@
       /* 整体居中 */
       text-align: center;
       gap: 30px;
+    }
+
+    .home-banner-container {
+      width: 50%;
     }
 
     .left-section {
@@ -170,6 +210,17 @@
     .right-section {
       align-items: center;
       /* 右侧内容也居中 */
+    }
+
+    .copyright-section {
+      margin-top: 20px;
+      padding-top: 15px;
+    }
+
+    .copyright-text {
+      font-size: 12px;
+      white-space: normal;
+      /* 移动端允许换行 */
     }
   }
 </style>

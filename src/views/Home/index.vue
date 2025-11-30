@@ -5,8 +5,23 @@
 
     <HomeBanner />
 
+    <!-- 印象派轮播图 -->
+    <div class="carousel-section">
+      <ImpressionCarousel />
+    </div>
+
+    <!-- 信息卡片组件 -->
+    <div class="info-cards-section">
+      <InfoCards />
+    </div>
+
     <div class="main-container">
       <HomeProfile @scroll-to-comments="scrollToComments" />
+    </div>
+
+    <!-- 问候组件 -->
+    <div class="greeting-section">
+      <Greeting />
     </div>
 
     <!-- 留言系统 -->
@@ -22,7 +37,11 @@
   import { defineAsyncComponent, onMounted, nextTick, ref } from 'vue'
   import HomeBanner from './components/HomeBanner.vue'
   import HomeProfile from './components/HomeProfile.vue'
+  import InfoCards from './components/InfoCards.vue'
+  import Greeting from './components/Greeting.vue'
+  import ImpressionCarousel from './components/ImpressionCarousel.vue'
   import { giscusConfig } from '@/config/giscus'
+  import { layoutConfig } from '@/config/layout'
   import { useConfetti } from '@/composables/useConfetti'
 
   // 留言板异步加载，确保在其他组件加载完成后再加载
@@ -59,7 +78,7 @@
     flex-direction: column;
     align-items: center;
     /* 电脑端默认间距 */
-    padding-top: 60px;
+    /* padding-top: 20px; */
     padding-bottom: 60px;
     gap: 60px;
 
@@ -112,20 +131,48 @@
     }
   }
 
-  /* --- 核心容器布局 --- */
-  .main-container {
-    max-width: 1000px;
+  /* --- 轮播图区域 --- */
+  .carousel-section {
+    max-width: v-bind('layoutConfig.contentMaxWidth');
     width: 100%;
     z-index: 10;
     position: relative;
-    padding: 0 20px;
+    padding: 0 v-bind('layoutConfig.contentPadding');
+  }
+
+  /* --- 信息卡片区域 --- */
+  .info-cards-section {
+    max-width: v-bind('layoutConfig.contentMaxWidth');
+    width: 100%;
+    z-index: 10;
+    position: relative;
+    padding: 0 v-bind('layoutConfig.contentPadding');
+  }
+
+  /* --- 核心容器布局 --- */
+  .main-container {
+    max-width: v-bind('layoutConfig.contentMaxWidth');
+    width: 100%;
+    z-index: 10;
+    position: relative;
+    padding: 0 v-bind('layoutConfig.contentPadding');
+  }
+
+  /* --- 问候组件区域 --- */
+  .greeting-section {
+    max-width: v-bind('layoutConfig.contentMaxWidth');
+    width: 100%;
+    padding: 0 v-bind('layoutConfig.contentPadding');
+    z-index: 10;
+    position: relative;
+    margin: -30px 0;
   }
 
   /* --- 留言系统区域 --- */
   .comments-section {
-    max-width: 1000px;
+    max-width: v-bind('layoutConfig.contentMaxWidth');
     width: 100%;
-    padding: 0 20px;
+    padding: 0 v-bind('layoutConfig.contentPadding');
     z-index: 10;
     position: relative;
   }
@@ -134,11 +181,24 @@
   @media (max-width: 768px) {
     .dashboard-page {
       gap: 30px;
-      padding-top: 30px;
+      /* padding-top: 30px; */
+    }
+
+    .carousel-section {
+      padding: 0 v-bind('layoutConfig.contentPaddingMobile');
+    }
+
+    .info-cards-section {
+      padding: 0 v-bind('layoutConfig.contentPaddingMobile');
     }
 
     .main-container {
       gap: 20px;
+    }
+
+    .greeting-section {
+      padding: 0 v-bind('layoutConfig.contentPaddingMobile');
+      margin: -15px 0;
     }
 
     /* 调整光斑位置，防止手机上挡住重要内容 */

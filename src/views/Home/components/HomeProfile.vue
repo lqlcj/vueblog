@@ -82,7 +82,8 @@
       <div class="stat-card glass-panel delay-4">
         <div class="stat-header">
           <span class="stat-title">今年进度</span>
-          <span class="stat-value">{{ displayProgress }}%</span>
+          <span class="stat-value" :key="displayProgress" :class="{ 'is-updating': isUpdating }">{{ displayProgress
+          }}%</span>
         </div>
         <div class="progress-bar">
           <div class="progress-fill" :style="{ width: barWidth + '%' }"></div>
@@ -94,7 +95,7 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, computed } from 'vue'
+  import { ref, onMounted, computed, watch } from 'vue'
   import { useRouter } from 'vue-router'
   import heroAvatar from '@/assets/images/home/avatar.jpg'
 
@@ -129,10 +130,6 @@
     }
   }
 
-  onMounted(() => {
-    typeWriter()
-  })
-
   // ========== 3D 视差效果逻辑 ==========
   // 功能：根据鼠标位置实现卡片3D倾斜效果
   const mouseX = ref(0)
@@ -158,12 +155,25 @@
     mouseY.value = 0
   }
 
-  // ========== 年度进度条逻辑 ==========
+  // ========== 年度进度条逻辑 ========== 
   // 功能：计算并显示当前年份的进度百分比，包含动画效果
   const displayProgress = ref('0.0')
   const barWidth = ref(0)
+  const isUpdating = ref(false)
+
+  // 监听数字变化，触发跳动动画
+  watch(displayProgress, () => {
+    isUpdating.value = true
+    setTimeout(() => {
+      isUpdating.value = false
+    }, 300)
+  })
 
   onMounted(() => {
+    // 启动打字机效果
+    typeWriter()
+
+    // 启动年度进度条动画
     const now = new Date()
     const start = new Date(now.getFullYear(), 0, 0)
     const diff = now - start
@@ -173,27 +183,28 @@
     const daysInYear = isLeap(now.getFullYear()) ? 366 : 365
     const targetVal = (day / daysInYear) * 100
 
+    // 延迟启动动画，让页面先渲染
     setTimeout(() => {
+      // 进度条宽度动画
       barWidth.value = targetVal
-    }, 500)
 
-    let startVal = 0
-    const duration = 1500
-    const startTime = performance.now()
+      // 数字跳动动画
+      let startVal = 0
+      const duration = 1500
+      const startTime = performance.now()
 
-    const animateNumber = (currentTime) => {
-      const elapsed = currentTime - startTime
-      const progress = Math.min(elapsed / duration, 1)
-      const ease = 1 - Math.pow(1 - progress, 4)
-      const currentNum = startVal + (targetVal - startVal) * ease
-      displayProgress.value = currentNum.toFixed(1)
+      const animateNumber = (currentTime) => {
+        const elapsed = currentTime - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        const ease = 1 - Math.pow(1 - progress, 4)
+        const currentNum = startVal + (targetVal - startVal) * ease
+        displayProgress.value = currentNum.toFixed(1)
 
-      if (progress < 1) {
-        requestAnimationFrame(animateNumber)
+        if (progress < 1) {
+          requestAnimationFrame(animateNumber)
+        }
       }
-    }
 
-    setTimeout(() => {
       requestAnimationFrame(animateNumber)
     }, 500)
   })
@@ -205,28 +216,47 @@
   .profile-container {
     display: grid;
     grid-template-columns: 0.9fr 1fr;
-    gap: 40px;
+    gap: 24px;
     width: 100%;
   }
 
-  /* ========== 玻璃态基础样式 ========== */
+  /* ========== 玻璃态基础样式（参考 InfoCards） ========== */
   .glass-panel {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 24px;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+    background: #faf9f6;
+    border: 1px solid #d4c5b0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .glass-panel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-color: #c4b5a0;
   }
 
   /* ========== 个人信息卡片样式 ========== */
   .profile-card {
     padding: 40px 30px;
-    transition: transform 0.1s ease-out;
+    transition: transform 0.1s ease-out, filter 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: center;
     height: 100%;
     transform-style: preserve-3d;
+    position: relative;
+  }
+
+  .profile-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-color: #c4b5a0;
+  }
+
+  .card-content {
+    position: relative;
+    z-index: 2;
   }
 
   .avatar-wrapper {
@@ -236,7 +266,7 @@
     overflow: hidden;
     margin-bottom: 20px;
     border: 2px solid rgba(44, 62, 80, 0.1);
-    box-shadow: 0 10px 30px rgba(31, 38, 135, 0.12);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
 
   .avatar-img {
@@ -244,6 +274,13 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    border-radius: 16px;
+    filter: contrast(95%) brightness(105%) sepia(10%);
+    transition: filter 0.3s ease;
+  }
+
+  .avatar-img:hover {
+    filter: none;
   }
 
   .name {
@@ -292,16 +329,16 @@
     color: white;
     border: none;
     padding: 10px 25px;
-    border-radius: 10px;
+    border-radius: 8px;
     font-size: 0.95rem;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     margin: 0;
   }
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   .btn-ghost {
@@ -309,10 +346,10 @@
     border: 2px solid #2c3e50;
     color: #2c3e50;
     padding: 8px 25px;
-    border-radius: 10px;
+    border-radius: 8px;
     font-size: 0.95rem;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
   }
 
   .btn-ghost:hover {
@@ -340,24 +377,25 @@
   }
 
   .grid-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(31, 38, 135, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-color: #c4b5a0;
   }
 
   @keyframes card-press {
     0% {
       transform: translateY(0) scale(1);
-      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     50% {
       transform: translateY(4px) scale(0.97);
-      box-shadow: 0 4px 20px rgba(31, 38, 135, 0.08);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
 
     100% {
       transform: translateY(0) scale(1);
-      box-shadow: 0 12px 40px rgba(31, 38, 135, 0.1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     }
   }
 
@@ -381,15 +419,17 @@
 
   .card-info h3 {
     font-size: 1.3rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #2c3e50;
     margin: 0 0 6px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   .sub-text {
     font-size: 0.85rem;
-    color: #888;
+    color: #666;
     margin: 0;
+    font-weight: 400;
   }
 
   .hover-arrow {
@@ -429,6 +469,26 @@
     font-size: 1.5rem;
     font-weight: 700;
     color: #2c3e50;
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+
+  .stat-value.is-updating {
+    animation: numberBounce 0.3s ease;
+  }
+
+  @keyframes numberBounce {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.3);
+    }
+
+    100% {
+      transform: scale(1);
+    }
   }
 
   .progress-bar {
@@ -487,7 +547,7 @@
   @media (max-width: 768px) {
     .profile-container {
       grid-template-columns: 1fr;
-      gap: 30px;
+      gap: 20px;
     }
 
     .dashboard-grid {
@@ -511,6 +571,28 @@
       height: 64px;
     }
   }
+
+  /* 可访问性优化 */
+  @media (prefers-reduced-motion: reduce) {
+
+    .glass-panel,
+    .grid-card,
+    .profile-card {
+      transition: none;
+    }
+
+    .glass-panel:hover,
+    .grid-card:hover,
+    .profile-card:hover {
+      transform: none;
+    }
+
+    .icon-box {
+      transition: none;
+    }
+
+    .grid-card:hover .icon-box {
+      transform: none;
+    }
+  }
 </style>
-
-
