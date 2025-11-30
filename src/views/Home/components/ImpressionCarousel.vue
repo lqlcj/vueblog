@@ -2,12 +2,27 @@
   <div class="carousel-container" v-if="images.length > 0">
     <div class="carousel-wrapper" @mouseenter="pauseAutoPlay" @mouseleave="resumeAutoPlay">
       <!-- 轮播图片容器 -->
-      <div class="carousel-track" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
-        <div v-for="(image, index) in images" :key="index" class="carousel-slide"
-          :class="{ 'active': index === currentIndex }">
+      <div class="carousel-track" :class="{ 'no-transition': skipTransition }"
+        :style="{ transform: `translateX(-${currentIndex * 100}%)` }" @transitionend="handleTransitionEnd">
+        <!-- 克隆最后一张到最前面（prepend） -->
+        <div class="carousel-slide">
+          <div class="image-wrapper">
+            <img :src="images[images.length - 1]" :alt="`Slide ${images.length}`" class="carousel-image" />
+            <div class="impression-overlay"></div>
+          </div>
+        </div>
+        <!-- 真实图片 -->
+        <div v-for="(image, index) in images" :key="`real-${index}`" class="carousel-slide"
+          :class="{ 'active': index === realIndex }">
           <div class="image-wrapper">
             <img :src="image" :alt="`Slide ${index + 1}`" class="carousel-image" />
-            <!-- 印象派模糊层 -->
+            <div class="impression-overlay"></div>
+          </div>
+        </div>
+        <!-- 克隆第一张到最后面（append） -->
+        <div class="carousel-slide">
+          <div class="image-wrapper">
+            <img :src="images[0]" :alt="`Slide 1`" class="carousel-image" />
             <div class="impression-overlay"></div>
           </div>
         </div>
@@ -23,8 +38,8 @@
 
       <!-- 指示器 -->
       <div class="carousel-indicators">
-        <button v-for="(image, index) in images" :key="index" class="indicator"
-          :class="{ 'active': index === currentIndex }" @click="goToSlide(index)"
+        <button v-for="(image, index) in images" :key="`indicator-${index}`" class="indicator"
+          :class="{ 'active': index === realIndex }" @click="goToSlide(index)"
           :aria-label="`Go to slide ${index + 1}`"></button>
       </div>
     </div>
@@ -35,7 +50,6 @@
   import { ref, onMounted, onUnmounted, computed } from 'vue'
 
   // 使用 Vite 的 import.meta.glob 动态导入轮播图文件夹中的所有图片
-  // 支持 jpg, jpeg, png, webp 等格式
   const imageModules = import.meta.glob('@/assets/images/carousel/*.{jpg,jpeg,png,webp,gif}', {
     eager: true,
     import: 'default'
@@ -44,30 +58,103 @@
   // 将导入的图片模块转换为数组，并按文件名排序
   const images = computed(() => {
     return Object.values(imageModules).sort((a, b) => {
-      // 按文件名排序，确保顺序一致
       const aName = a.split('/').pop()
       const bName = b.split('/').pop()
       return aName.localeCompare(bName)
     })
   })
 
-  const currentIndex = ref(0)
+  // DOM结构：[图3(克隆), 图1(真实), 图2(真实), 图3(真实), 图1(克隆)]
+  // 索引：   0           1          2          3          4
+  // currentIndex: 0=克隆的最后一张, 1~length=真实图片, length+1=克隆的第一张
+  const currentIndex = ref(1) // 初始位置：真实的第一张图（索引1），无动画
+  const skipTransition = ref(false) // 是否跳过过渡动画（用于无缝跳转）
   let autoPlayTimer = null
   const autoPlayInterval = 4000 // 4秒切换一次
 
-  // 下一张
-  const nextSlide = () => {
-    currentIndex.value = (currentIndex.value + 1) % images.value.length
+  // 计算真实索引（用于指示器显示）
+  const realIndex = computed(() => {
+    if (currentIndex.value === 0) {
+      return images.value.length - 1
+    }
+    if (currentIndex.value === images.value.length + 1) {
+      return 0
+    }
+    return currentIndex.value - 1
+  })
+
+  // 处理过渡结束事件
+  const handleTransitionEnd = () => {
+    // "下一页"逻辑：从真实的最后一张图（索引length）滑动到克隆的第一张图（索引length+1）
+    // 在 transitionend 事件后，立即执行无缝跳转
+    if (currentIndex.value === images.value.length + 1) {
+      // 1. 设置 transition: none; （取消过渡动画）
+      skipTransition.value = true
+      // 2. 将 translateX 瞬间"跳"回到真实的第一张图（索引1）
+      currentIndex.value = 1
+      // 3. 恢复 transition 属性（在下一帧）
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          skipTransition.value = false
+        })
+      })
+    }
+    // "上一页"逻辑：从真实的第一张图（索引1）滑动到克隆的最后一张图（索引0）
+    // 在 transitionend 事件后，立即执行无缝跳转
+    else if (currentIndex.value === 0) {
+      // 1. 设置 transition: none; （取消过渡动画）
+      skipTransition.value = true
+      // 2. 将 translateX 瞬间"跳"回到真实的最后一张图（索引length）
+      currentIndex.value = images.value.length
+      // 3. 恢复 transition 属性（在下一帧）
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          skipTransition.value = false
+        })
+      })
+    }
   }
 
-  // 上一张
+  // 下一页
+  const nextSlide = () => {
+    if (!images.value || images.value.length === 0) return
+
+    // 如果已经在真实的最后一张图（索引length），滑动到克隆的第一张图（索引length+1）
+    if (currentIndex.value === images.value.length) {
+      currentIndex.value = images.value.length + 1
+    }
+    // 正常递增
+    else if (currentIndex.value >= 1 && currentIndex.value < images.value.length) {
+      currentIndex.value++
+    }
+  }
+
+  // 上一页
   const prevSlide = () => {
-    currentIndex.value = (currentIndex.value - 1 + images.value.length) % images.value.length
+    if (!images.value || images.value.length === 0) return
+
+    // 如果已经在真实的第一张图（索引1），滑动到克隆的最后一张图（索引0）
+    if (currentIndex.value === 1) {
+      currentIndex.value = 0
+    }
+    // 正常递减
+    else if (currentIndex.value > 1 && currentIndex.value <= images.value.length) {
+      currentIndex.value--
+    }
   }
 
   // 跳转到指定幻灯片
   const goToSlide = (index) => {
-    currentIndex.value = index
+    if (index < 0 || index >= images.value.length) return
+    // 直接跳转到对应的真实图片索引（index + 1），无动画
+    skipTransition.value = true
+    currentIndex.value = index + 1
+    // 下一帧恢复过渡动画
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        skipTransition.value = false
+      })
+    })
   }
 
   // 暂停自动播放
@@ -92,7 +179,16 @@
   }
 
   onMounted(() => {
-    startAutoPlay()
+    // 初始位置：必须立即（没有动画）定位到真实的第一张图（索引1）
+    skipTransition.value = true
+    currentIndex.value = 1
+    // 下一帧恢复过渡动画
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        skipTransition.value = false
+        startAutoPlay()
+      })
+    })
   })
 
   onUnmounted(() => {
@@ -117,18 +213,22 @@
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    /* 印象派风格：柔和的阴影 */
   }
 
   .carousel-track {
     display: flex;
-    width: 100%;
     height: 100%;
+    /* 使用 CSS transition 实现动画 */
     transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    /* 印象派风格：柔和的过渡动画 */
+  }
+
+  /* 取消过渡动画（用于无缝跳转） */
+  .carousel-track.no-transition {
+    transition: none;
   }
 
   .carousel-slide {
+    flex: 0 0 100%;
     min-width: 100%;
     height: 100%;
     position: relative;
@@ -146,7 +246,6 @@
     height: 100%;
     object-fit: cover;
     filter: blur(0.5px) brightness(1.05) saturate(1.1);
-    /* 印象派风格：轻微模糊和色彩增强 */
     transition: filter 1.2s ease;
   }
 
@@ -154,7 +253,7 @@
     filter: blur(0.3px) brightness(1.08) saturate(1.15);
   }
 
-  /* 印象派模糊层 - 营造柔和的视觉效果 */
+  /* 印象派模糊层 */
   .impression-overlay {
     position: absolute;
     top: 0;
@@ -167,7 +266,6 @@
         rgba(230, 230, 250, 0.15) 50%,
         rgba(240, 248, 255, 0.1) 75%,
         rgba(255, 255, 255, 0.1) 100%);
-    /* 印象派风格：柔和的渐变叠加 */
     pointer-events: none;
     mix-blend-mode: soft-light;
   }
@@ -183,7 +281,6 @@
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
-    /* 印象派风格：毛玻璃效果 */
     color: #2c3e50;
     font-size: 28px;
     cursor: pointer;
@@ -249,7 +346,6 @@
     background: rgba(255, 255, 255, 0.9);
     width: 30px;
     border-radius: 5px;
-    /* 印象派风格：柔和的激活状态 */
   }
 
   /* 响应式设计 */
@@ -316,6 +412,5 @@
     z-index: -1;
     opacity: 0.6;
     filter: blur(8px);
-    /* 印象派风格：柔和的边框光晕 */
   }
 </style>

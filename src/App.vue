@@ -61,4 +61,11 @@
     /* 让内容区占据剩余空间，把 Footer 挤到最下面 */
     width: 100%;
   }
+
+  /* 移动端：为底部固定导航栏留出空间 */
+  @media (max-width: 768px) {
+    .main-content {
+      padding-bottom: 70px; /* 为底部导航栏留出空间 */
+    }
+  }
 </style>

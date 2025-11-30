@@ -7,23 +7,66 @@
 </template>
 
 <script setup>
-  import { computed } from 'vue'
+  import { ref, onMounted, onBeforeUnmount } from 'vue'
+
+  // 问候语文本
+  const greetingText = ref('Good evening, Traveler.')
+
+  // 获取中国时区（UTC+8）的当前小时
+  const getChinaHour = () => {
+    const now = new Date()
+    // 获取UTC时间
+    const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000)
+    // 转换为中国时区（UTC+8）
+    const chinaTime = new Date(utcTime + (8 * 3600000))
+    return chinaTime.getHours()
+  }
 
   // 根据当前时间获取问候语
   const getGreeting = () => {
-    const hour = new Date().getHours()
+    const hour = getChinaHour()
 
+    // 6:00-11:00 早上
     if (hour >= 6 && hour < 11) {
       return 'Good morning, Traveler.'
-    } else if (hour >= 11 && hour < 18) {
+    }
+    // 11:00-18:00 下午
+    else if (hour >= 11 && hour < 18) {
       return 'Good afternoon, Traveler.'
-    } else {
-      // 18:00-6:00
+    }
+    // 18:00-6:00 晚上/夜里
+    else {
       return 'Good evening, Traveler.'
     }
   }
 
-  const greetingText = computed(() => getGreeting())
+  // 更新问候语
+  const updateGreeting = () => {
+    const newGreeting = getGreeting()
+    if (greetingText.value !== newGreeting) {
+      greetingText.value = newGreeting
+    }
+  }
+
+  // 定时器
+  let timeUpdateTimer = null
+
+  onMounted(() => {
+    // 立即更新一次
+    updateGreeting()
+
+    // 每5秒检查一次时间（确保跨小时时能及时更新）
+    timeUpdateTimer = setInterval(() => {
+      updateGreeting()
+    }, 5000) // 5秒检查一次
+  })
+
+  onBeforeUnmount(() => {
+    if (timeUpdateTimer) {
+      clearInterval(timeUpdateTimer)
+      timeUpdateTimer = null
+    }
+  })
 </script>
 
 <style scoped>

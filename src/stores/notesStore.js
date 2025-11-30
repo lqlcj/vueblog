@@ -108,7 +108,23 @@ export const useNotesStore = defineStore("notes", {
       }
 
       // 按日期排序并存入 state
-      this.allPosts = posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+      this.allPosts = posts.sort((a, b) => {
+        // 处理空日期：空日期使用最小日期（1970-01-01）
+        const dateA = a.date && a.date.trim() ? new Date(a.date) : new Date(0);
+        const dateB = b.date && b.date.trim() ? new Date(b.date) : new Date(0);
+        
+        // 获取时间戳进行比较
+        const timeA = dateA.getTime();
+        const timeB = dateB.getTime();
+        
+        // 如果日期相同，按 id 降序（后添加的在前，因为 id 是递增的）
+        if (timeB === timeA) {
+          return b.id - a.id;
+        }
+        
+        // 降序排序：最新的在前
+        return timeB - timeA;
+      });
 
       // 读取本地缓存的点赞状态
       this.loadLikesFromStorage();

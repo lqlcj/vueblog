@@ -14,8 +14,8 @@
         Notes
       </router-link>
 
-      <router-link to="/market" class="nav-link" :class="{ select: isMarketGroupActive }">
-        Market
+      <router-link to="/friends" class="nav-link" :class="{ select: isFriendsGroupActive }">
+        Friends
       </router-link>
 
       <router-link to="/about" class="nav-link" active-class="select">
@@ -32,7 +32,7 @@
 
   const route = useRoute()
 
-  const isMarketGroupActive = computed(() => route.path.startsWith('/market'))
+  const isFriendsGroupActive = computed(() => route.path.startsWith('/friends'))
 </script>
 
 <style scoped>
@@ -107,48 +107,47 @@
   /* 当屏幕宽度小于 768px (手机/平板竖屏) 时，覆盖上面的样式 */
   @media (max-width: 768px) {
     .header {
-      /* 1. 宽度重置：手机上必须占满，不能是 min-width: 975px */
+      /* 1. 固定在底部 */
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      /* 2. 宽度重置：手机上必须占满 */
       min-width: 100%;
       max-width: 100%;
-      /* 2. 高度自适应：内容变两行了，高度要自动 */
+      /* 3. 高度自适应 */
       height: auto;
-      /* 3. 布局改为垂直排列：Logo在上，菜单在下 */
-      flex-direction: column;
-      margin: 10px 0;
-      /* 减小外边距 */
-      padding: 10px 0;
+      /* 4. 保持横向布局：Logo在左，菜单在右 */
+      flex-direction: row;
+      margin: 0;
+      padding: 10px 15px;
+      /* 5. 添加背景和阴影，让底部导航更明显 */
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .header .logo {
-      /* 清除 PC 端的左边距，改为居中 */
-      margin-left: 0;
-      margin-bottom: 15px;
-      /* Logo 和菜单之间的间距 */
-      justify-content: center;
-    }
-
-    .header .logo img {
-      /* 手机上 Logo稍微小一点点更协调 */
-      max-height: 40px;
+      /* 移动端隐藏LOGO */
+      display: none;
     }
 
     .header .menu {
       /* 清除 PC 端的右内边距 */
       padding-right: 0;
-      /* 菜单居中 */
-      justify-content: center;
+      /* 菜单居中均匀分布 */
+      justify-content: space-around;
       width: 100%;
-      /* 防止链接太多换行时太乱 */
-      flex-wrap: wrap;
-      /* 恢复为移动端原来的紧凑排列方式，不使用 PC 端的 gap */
+      flex: 1;
+      /* 恢复 gap 控制间距 */
       gap: 0;
     }
 
     .header .menu a {
-      /* 手机上字号稍微改小一点，防止换行太厉害 */
-      font-size: 1rem;
-      /* 左右间距改小且均匀 */
-      margin: 0 10px;
+      /* 手机上字号稍微改小一点 */
+      font-size: 0.9rem;
+      margin: 0;
     }
 
   }

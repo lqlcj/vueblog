@@ -1,0 +1,292 @@
+<template>
+  <div class="moments-list">
+    <div v-for="post in posts" :key="post.id" class="post-item">
+      <div class="avatar-container">
+        <img :src="post.author.avatar" alt="avatar" class="avatar-img" />
+      </div>
+      <div class="post-content">
+        <div class="nickname">{{ post.author.nickname }}</div>
+        <p class="content-text" v-html="post.content.replace(/\n/g, '<br/>')"></p>
+        <div v-if="post.images && post.images.length > 0" class="image-gallery">
+          <div v-if="post.images.length === 1" class="image-wrapper single-image">
+            <img :src="post.images[0]" alt="post image" class="gallery-image" />
+          </div>
+          <div v-else class="image-grid" :class="{ 'four-grid': post.images.length === 4 }">
+            <div v-for="(image, index) in post.images" :key="index" class="image-wrapper grid-image">
+              <img :src="image" alt="post image" class="gallery-image" />
+            </div>
+          </div>
+        </div>
+        <div class="timestamp">{{ post.timestamp }}</div>
+      </div>
+    </div>
+
+    <!-- 加载更多按钮 -->
+    <div v-if="hasMore" class="load-more-container">
+      <button class="load-more-btn" @click="loadMore">
+        {{ isLoading ? '加载中...' : '加载更多' }}
+      </button>
+    </div>
+  </div>
+</template>
+
+<script setup>
+  import { ref, onMounted, computed } from 'vue'
+  import momentsData from '@/data/moments.json'
+  import avatarImage from '@/assets/images/home/avatar.jpg'
+
+  // 路径映射：将 @/ 开头的路径转换为实际导入的图片
+  const pathMap = {
+    '@/assets/images/home/avatar.jpg': avatarImage
+  }
+
+  // 处理图片路径
+  const resolveImagePath = (path) => {
+    if (path && path.startsWith('@/')) {
+      return pathMap[path] || path
+    }
+    return path
+  }
+
+  // 处理所有数据，转换图片路径
+  const allPosts = computed(() => {
+    return momentsData.map(post => ({
+      ...post,
+      author: {
+        ...post.author,
+        avatar: resolveImagePath(post.author.avatar)
+      },
+      images: post.images ? post.images.map(img => resolveImagePath(img)) : []
+    }))
+  })
+
+  // 分页相关
+  const pageSize = 10 // 每页显示10条
+  const currentPage = ref(1)
+  const isLoading = ref(false)
+
+  // 当前显示的文章列表
+  const posts = computed(() => {
+    return allPosts.value.slice(0, currentPage.value * pageSize)
+  })
+
+  // 是否还有更多
+  const hasMore = computed(() => {
+    return allPosts.value.length > currentPage.value * pageSize
+  })
+
+  // 加载更多
+  const loadMore = () => {
+    if (isLoading.value || !hasMore.value) return
+
+    isLoading.value = true
+    // 模拟加载延迟
+    setTimeout(() => {
+      currentPage.value++
+      isLoading.value = false
+    }, 500)
+  }
+</script>
+
+<style scoped>
+
+  /* 全局背景和字体，模拟一个干净的列表 */
+  .moments-list {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background-color: transparent;
+    width: 100%;
+    margin: 0;
+    padding: 0 0 0 30px;
+  }
+
+  /* 每一条动态的容器 */
+  .post-item {
+    display: flex;
+    padding: 12px 10px;
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  /* 1. 头像 */
+  .avatar-container {
+    margin-right: 10px;
+  }
+
+  .avatar-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    /* 微信风格的圆角矩形 */
+    display: block;
+  }
+
+  /* 2. 右侧内容区 */
+  .post-content {
+    flex: 1;
+    /* 占据所有剩余空间 */
+    min-width: 0;
+    /* 修复 flex 布局中子元素溢出的问题 */
+  }
+
+  /* 2.1 昵称 */
+  .nickname {
+    font-weight: 600;
+    color: #576b95;
+    /* 微信的"链接蓝" */
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+
+  /* 2.2 文本内容 */
+  .content-text {
+    font-size: 13px;
+    color: #333;
+    margin: 0 0 8px 0;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    /* 保证换行符 \n 生效 */
+    word-wrap: break-word;
+    /* 英文长单词换行 */
+  }
+
+  /* 2.3 图片画廊 */
+  .image-gallery {
+    margin-bottom: 8px;
+  }
+
+  .image-wrapper {
+    overflow: hidden;
+    background-color: #f0f0f0;
+    /* 图片加载时的底色 */
+  }
+
+  .gallery-image {
+    display: block;
+    object-fit: cover;
+    /* 保证图片被裁剪填充，不变形 */
+  }
+
+  /* --- 图片布局核心逻辑 --- */
+
+  /* 情况一：单图 */
+  .single-image {
+    max-width: 200px;
+    /* 单图最大宽度 */
+    max-height: 300px;
+    /* 单图最大高度 */
+    border-radius: 6px;
+  }
+
+  .single-image .gallery-image {
+    width: 100%;
+    height: auto;
+    /* 高度自适应 */
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    /* 如果图片太大，就裁剪 */
+  }
+
+  /* 情况二：多图网格 */
+  .image-grid {
+    display: grid;
+    gap: 4px;
+    /* 网格间距 */
+
+    /* 默认是 3 列，适用于 2, 3, 5, 6, 7, 8, 9 张图 */
+    grid-template-columns: repeat(3, 70px);
+  }
+
+  /* 特殊情况：4 张图时，强制为 2 列 */
+  .image-grid.four-grid {
+    grid-template-columns: repeat(2, 70px);
+  }
+
+  /* 网格中的图片样式 */
+  .grid-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 4px;
+  }
+
+  .grid-image .gallery-image {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* 2.4 创建时间 */
+  .timestamp {
+    font-size: 11px;
+    color: #999999;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .moments-list {
+      padding: 5px 5px 5px 0;
+    }
+
+    .post-item {
+      padding: 15px 10px;
+    }
+
+    .avatar-img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .nickname {
+      font-size: 12px;
+    }
+
+    .content-text {
+      font-size: 12px;
+    }
+
+    .image-grid {
+      grid-template-columns: repeat(3, calc((100% - 8px) / 3));
+    }
+
+    .image-grid.four-grid {
+      grid-template-columns: repeat(2, calc((100% - 4px) / 2));
+    }
+
+    .grid-image {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1;
+    }
+
+    .single-image {
+      max-width: 100%;
+    }
+  }
+
+  /* 加载更多按钮 */
+  .load-more-container {
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 10px;
+  }
+
+  .load-more-btn {
+    padding: 8px 24px;
+    background: transparent;
+    border: 1px solid #d0d0d0;
+    border-radius: 20px;
+    color: #666;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .load-more-btn:hover {
+    border-color: #576b95;
+    color: #576b95;
+    background: rgba(87, 107, 149, 0.05);
+  }
+
+  .load-more-btn:active {
+    transform: scale(0.98);
+  }
+</style>

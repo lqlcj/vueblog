@@ -1,0 +1,200 @@
+[
+  {
+    "id": 1,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "不畏将来，不念过往，就是对时光最美sssr的回应，愿这悠长岁月温柔安好。",
+    "timestamp": "创建时间: 2025-05-20 12:00:00",
+    "images": [
+      "https://placehold.co/100x100/A9E34B/white?text=1",
+      "https://placehold.co/100x100/F5A623/white?text=2",
+      "https://placehold.co/100x100/7ED321/white?text=3",
+      "https://placehold.co/100x100/F8E71C/white?text=4",
+      "https://placehold.co/100x100/BD10E0/white?text=5",
+      "https://placehold.co/100x100/4A90E2/white?text=6",
+      "https://placehold.co/100x100/D0021B/white?text=7",
+      "https://placehold.co/100x100/9013FE/white?text=8",
+      "https://placehold.co/100x100/B8E986/white?text=9"
+    ]
+  },
+  {
+    "id": 2,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "不乖乖睡觉的孩子会到月球罚站。",
+    "timestamp": "创建时间: 2025-05-20 12:00:00",
+    "images": [
+      "https://placehold.co/100x100/50E3C2/white?text=A",
+      "https://placehold.co/100x100/4A4A4A/white?text=B"
+    ]
+  },
+  {
+    "id": 3,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "没有边角料 都是主旋律！\n这是第二行内容。",
+    "timestamp": "创建时间: 2025-05-20 12:00:00",
+    "images": [
+      "https://placehold.co/300x400/E7B5D8/white?text=Single"
+    ]
+  },
+  {
+    "id": 4,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "演示 4 张图的效果 (2x2 网格)",
+    "timestamp": "创建时间: 2025-05-20 12:00:00",
+    "images": [
+      "https://placehold.co/100x100/FF6B6B/white?text=S",
+      "https://placehold.co/100x100/FFD166/white?text=P",
+      "https://placehold.co/100x100/06D6A0/white?text=E",
+      "https://placehold.co/100x100/118AB2/white?text=C"
+    ]
+  },
+  {
+    "id": 5,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "今天天气真好，适合出去走走。",
+    "timestamp": "创建时间: 2025-05-19 15:30:00",
+    "images": [
+      "https://placehold.co/100x100/FFB6C1/white?text=5"
+    ]
+  },
+  {
+    "id": 6,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "分享一些生活碎片，记录美好时光。",
+    "timestamp": "创建时间: 2025-05-19 10:20:00",
+    "images": [
+      "https://placehold.co/100x100/87CEEB/white?text=6",
+      "https://placehold.co/100x100/DDA0DD/white?text=7",
+      "https://placehold.co/100x100/F0E68C/white?text=8"
+    ]
+  },
+  {
+    "id": 7,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "周末的午后，一杯咖啡，一本书，享受慢生活。",
+    "timestamp": "创建时间: 2025-05-18 14:00:00",
+    "images": []
+  },
+  {
+    "id": 8,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "发现了一家很棒的咖啡店，环境很舒适。",
+    "timestamp": "创建时间: 2025-05-18 11:00:00",
+    "images": [
+      "https://placehold.co/200x200/8B4513/white?text=Cafe"
+    ]
+  },
+  {
+    "id": 9,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "今天完成了项目，心情不错！",
+    "timestamp": "创建时间: 2025-05-17 18:30:00",
+    "images": [
+      "https://placehold.co/100x100/32CD32/white?text=9",
+      "https://placehold.co/100x100/FF6347/white?text=10",
+      "https://placehold.co/100x100/4169E1/white?text=11",
+      "https://placehold.co/100x100/FF1493/white?text=12"
+    ]
+  },
+  {
+    "id": 10,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "学习新技能，每天进步一点点。",
+    "timestamp": "创建时间: 2025-05-17 09:00:00",
+    "images": [
+      "https://placehold.co/100x100/FFA500/white?text=13"
+    ]
+  },
+  {
+    "id": 11,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "和朋友一起看日落，美好的时光总是短暂的。",
+    "timestamp": "创建时间: 2025-05-16 19:00:00",
+    "images": [
+      "https://placehold.co/100x100/FF4500/white?text=14",
+      "https://placehold.co/100x100/FFD700/white?text=15",
+      "https://placehold.co/100x100/FF69B4/white?text=16",
+      "https://placehold.co/100x100/00CED1/white?text=17",
+      "https://placehold.co/100x100/9370DB/white?text=18"
+    ]
+  },
+  {
+    "id": 12,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "今天读了一本好书，推荐给大家。",
+    "timestamp": "创建时间: 2025-05-16 16:00:00",
+    "images": [
+      "https://placehold.co/250x350/2F4F4F/white?text=Book"
+    ]
+  },
+  {
+    "id": 13,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "记录生活中的小确幸，让每一天都充满意义。",
+    "timestamp": "创建时间: 2025-05-15 20:00:00",
+    "images": [
+      "https://placehold.co/100x100/FFB6C1/white?text=19",
+      "https://placehold.co/100x100/98FB98/white?text=20"
+    ]
+  },
+  {
+    "id": 14,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "周末的早晨，阳光透过窗户洒进来，很温暖。",
+    "timestamp": "创建时间: 2025-05-15 08:00:00",
+    "images": []
+  },
+  {
+    "id": 15,
+    "author": {
+      "nickname": "Leyili",
+      "avatar": "@/assets/images/home/avatar.jpg"
+    },
+    "content": "尝试做了一道新菜，味道还不错！",
+    "timestamp": "创建时间: 2025-05-14 19:30:00",
+    "images": [
+      "https://placehold.co/200x200/FF6347/white?text=Food"
+    ]
+  }
+]

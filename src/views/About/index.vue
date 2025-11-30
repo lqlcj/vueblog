@@ -17,32 +17,68 @@
           <section>
             <h3>👋 Hello, Traveler.</h3>
             <p>
-              欢迎来到我的数字后花园。这不仅仅是一个展示代码的博客，更是我思维碎片的暂存区。
-              这里的每一行代码都由 <strong>Vue 3 + Vite</strong> 驱动，每一篇文章都由 <strong>Obsidian</strong> 撰写。
-              我是一名热衷于构建极致体验的开发者，也是一名像素工匠。
+              欢迎来到我的后花园。这是一个思维碎片的暂存区。这里的每一行代码都由 <strong>Vue 3 + Vite</strong> 驱动，每一篇文章都由 <strong>Obsidian</strong> 撰写。
             </p>
           </section>
 
           <section>
-            <h3>🛡️ Privacy Policy</h3>
-            <p>既然你看到了这里，为了让你放心，我也写个“隐私声明”，但我的版本只有三句话：</p>
-            <ul class="policy-list">
-              <li><strong>1. 纯静态，无后台：</strong> 本站是一个纯静态网站。我没有数据库，没有登录系统。</li>
-              <li><strong>2. 关于 Cookies：</strong> 我只用 LocalStorage 记住你的偏好，没有追踪代码。</li>
-              <li><strong>3. 你的数据归你：</strong> 我不收集你的任何信息，所以你是自由的。</li>
+            <h3>⚡ Powered By</h3>
+            <p>这是一个基于 Vue 3 构建的纯静态个人博客系统，采用 Composition API、Pinia 状态管理和 Vite 构建工具，支持 Markdown 文章、友链管理和 Giscus 留言系统。</p>
+            <p>现已在github开源。</p>
+
+            <h4 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem; color: #2c3e50;">✨ 特性</h4>
+            <ul class="feature-list">
+              <li><strong>📝 Markdown 支持</strong>：支持 Markdown 格式文章，自动解析 front-matter</li>
+              <li><strong>🎯 响应式布局</strong>：完美适配桌面端和移动端</li>
+              <li><strong>🚀 性能优化</strong>：代码分割、懒加载、异步组件加载</li>
+              <li><strong>💬 留言系统</strong>：集成 Giscus 评论系统</li>
+              <li><strong>🔗 友链管理</strong>：支持友链申请和管理</li>
+              <li><strong>🎭 动画效果</strong>：使用 GSAP 和 CSS 动画，流畅的交互体验</li>
+              <li><strong>⚡ 快速构建</strong>：基于 Vite 的快速开发体验</li>
+            </ul>
+
+            <h4 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem; color: #2c3e50;">核心框架</h4>
+            <ul class="feature-list">
+              <li><strong>Vue 3.4+</strong> - 渐进式 JavaScript 框架</li>
+              <li><strong>Vue Router 4</strong> - 官方路由管理器</li>
+              <li><strong>Pinia</strong> - Vue 官方状态管理库</li>
+            </ul>
+
+            <h4 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem; color: #2c3e50;">构建工具</h4>
+            <ul class="feature-list">
+              <li><strong>Vite 7.2+</strong> - 前端构建工具</li>
+              <li><strong>@vitejs/plugin-vue</strong> - Vue 单文件组件支持</li>
+            </ul>
+
+            <h4 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem; color: #2c3e50;">功能库</h4>
+            <ul class="feature-list">
+              <li><strong>markdown-it</strong> - Markdown 解析器</li>
+              <li><strong>front-matter</strong> - Front matter 解析</li>
+              <li><strong>github-markdown-css</strong> - GitHub 风格 Markdown 样式</li>
+              <li><strong>gsap</strong> - 动画库</li>
+              <li><strong>canvas-confetti</strong> - 彩带动画效果</li>
+            </ul>
+
+            <h4 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem; color: #2c3e50;">开发工具</h4>
+            <ul class="feature-list">
+              <li><strong>unplugin-auto-import</strong> - 自动导入 API</li>
+              <li><strong>unplugin-vue-components</strong> - 自动导入组件</li>
+              <li><strong>rollup-plugin-visualizer</strong> - 打包分析工具</li>
             </ul>
           </section>
 
           <section>
-            <h3>⚡ Powered By</h3>
-            <p>为了构建这个网站，我使用了以下技术栈：</p>
-            <div class="tech-tags">
-              <span class="tag">Vue3</span>
-              <span class="tag">Vite</span>
-              <span class="tag">Pinia</span>
-              <span class="tag">JavaScript</span>
-              <span class="tag">CSS3</span>
-            </div>
+            <h3>👤 作者</h3>
+            <p>&nbsp;&nbsp;元宵 (LCJ)</p>
+          </section>
+
+          <section>
+            <h3>🙏 致谢</h3>
+            <ul class="feature-list">
+              <li>Vue.js 团队</li>
+              <li>Vite 团队</li>
+              <li>所有开源贡献者</li>
+            </ul>
           </section>
 
           <section>
@@ -166,7 +202,7 @@
   // 🚀 优化：跳转 Github，添加安全检查
   const goToGithub = () => {
     try {
-      window.open('https://github.com', '_blank', 'noopener,noreferrer')
+      window.open('https://github.com/lqlcj/vueblog', '_blank', 'noopener,noreferrer')
       githubState.confirming = false
     } catch (err) {
       console.error('Failed to open Github', err)
@@ -292,18 +328,25 @@
     text-align: justify;
   }
 
-  .policy-list li {
+  .policy-list li,
+  .feature-list li {
     background: rgba(255, 255, 255, 0.5);
-    padding: 15px;
-    margin-bottom: 10px;
+    padding: 8px 15px;
+    margin-bottom: 5px;
     border-radius: 8px;
     font-size: 1rem;
     line-height: 1.6;
     color: #666;
+    list-style: none;
   }
 
-  .policy-list strong {
+  .policy-list strong,
+  .feature-list strong {
     color: #d84315;
+  }
+
+  .feature-list {
+    padding-left: 0;
   }
 
   .tech-tags {

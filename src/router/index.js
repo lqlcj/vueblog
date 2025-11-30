@@ -6,7 +6,7 @@ import Welcome from "@/views/Welcome/index.vue";
 // 🚀 性能优化：其他路由使用懒加载
 const Home = () => import("@/views/Home/index.vue");
 const Notes = () => import("@/views/Notes/index.vue");
-const Market = () => import("@/views/Market/index.vue");
+const Friends = () => import("@/views/Friends/index.vue");
 const About = () => import("@/views/About/index.vue");
 const PostDetail = () => import("@/views/Notes/PostDetail.vue");
 
@@ -27,9 +27,9 @@ const routes = [
     component: Notes,
   },
   {
-    path: "/market",
-    name: "Market",
-    component: Market,
+    path: "/friends",
+    name: "Friends",
+    component: Friends,
   },
   // 【新增】配置文章详情页路由
   // 当访问 /post?path=xxx 时，显示这个页面

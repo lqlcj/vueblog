@@ -4,8 +4,7 @@
       <p>暂无友链，快来申请吧！</p>
     </div>
 
-    <div v-else class="friends-grid-wrapper">
-      <div class="friends-grid">
+    <div v-else class="friends-grid">
         <div 
           v-for="(friend, index) in friends" 
           :key="index" 
@@ -39,7 +38,6 @@
             </div>
           </div>
         </div>
-      </div>
     </div>
   </div>
 </template>
@@ -104,44 +102,6 @@
     padding: 24px 20px;
     color: #999;
     font-size: 0.85rem;
-  }
-
-  /* 滚动容器 */
-  /* 计算：卡片高度约64px + 间距12px = 76px/行，2行约152px，加上边距约180px */
-  .friends-grid-wrapper {
-    max-height: 180px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 8px;
-    /* 为滚动条留出空间 */
-    position: relative;
-  }
-
-  /* 确保网格内容可以超出容器 */
-  .friends-grid-wrapper .friends-grid {
-    min-height: min-content;
-  }
-
-  /* 自定义滚动条样式 */
-  .friends-grid-wrapper::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .friends-grid-wrapper::-webkit-scrollbar-track {
-    background: rgba(224, 195, 252, 0.1);
-    border-radius: 8px;
-  }
-
-  .friends-grid-wrapper::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, rgba(162, 155, 254, 0.6) 0%, rgba(108, 92, 231, 0.6) 100%);
-    border-radius: 8px;
-    border: 1px solid transparent;
-    background-clip: padding-box;
-  }
-
-  .friends-grid-wrapper::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, rgba(162, 155, 254, 0.8) 0%, rgba(108, 92, 231, 0.8) 100%);
-    background-clip: padding-box;
   }
 
   .friends-grid {
@@ -321,13 +281,6 @@
 
   /* 响应式设计 */
   @media (max-width: 768px) {
-
-    /* 移动端：卡片高度约60px + 间距10px = 70px/行，2行约140px */
-    .friends-grid-wrapper {
-      max-height: 140px;
-      padding-right: 4px;
-    }
-
     .friends-grid {
       grid-template-columns: 1fr;
       gap: 10px;

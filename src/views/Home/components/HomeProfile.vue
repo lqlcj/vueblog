@@ -19,19 +19,13 @@
         </div>
 
         <!-- 名字标题 -->
-        <h1 class="name">Hello, I'm LCJ.</h1>
+        <h1 class="name">Hello, I'm 元宵.</h1>
 
         <!-- 打字机效果：动态显示 -->
         <p class="role-text">喜欢 <span class="typing-cursor">{{ typedText }}</span></p>
 
         <!-- 个人简介 -->
         <p class="bio">白天写代码，晚上写点文字。<br>循序慢行，给生活加一点设计感。</p>
-
-        <!-- 操作按钮 -->
-        <div class="action-buttons">
-          <button class="btn-primary" @click="$router.push('/notes')">阅读笔记</button>
-          <button class="btn-ghost" @click="$router.push('/about')">关于我</button>
-        </div>
       </div>
     </div>
 
@@ -83,7 +77,7 @@
         <div class="stat-header">
           <span class="stat-title">今年进度</span>
           <span class="stat-value" :key="displayProgress" :class="{ 'is-updating': isUpdating }">{{ displayProgress
-          }}%</span>
+            }}%</span>
         </div>
         <div class="progress-bar">
           <div class="progress-fill" :style="{ width: barWidth + '%' }"></div>
@@ -316,45 +310,6 @@
     50% {
       opacity: 0;
     }
-  }
-
-  .action-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .btn-primary {
-    background: #2c3e50;
-    color: white;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin: 0;
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  .btn-ghost {
-    background: transparent;
-    border: 2px solid #2c3e50;
-    color: #2c3e50;
-    padding: 8px 25px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .btn-ghost:hover {
-    background: rgba(44, 62, 80, 0.1);
-    transform: translateY(-2px);
   }
 
   /* ========== 功能卡片网格样式 ========== */
