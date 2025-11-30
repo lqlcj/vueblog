@@ -85,8 +85,7 @@
     flex-direction: row;
     gap: 24px;
     width: 100%;
-    max-width: v-bind('layoutConfig.contentMaxWidth');
-    margin: 0 auto;
+    padding: 0 15px;
   }
 
   .info-card {
@@ -408,6 +407,7 @@
       flex-direction: column;
       max-width: 100%;
       gap: 20px;
+      padding: 0 15px;
     }
 
     .info-card {

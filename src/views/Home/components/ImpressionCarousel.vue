@@ -2,8 +2,10 @@
   <div class="carousel-container" v-if="images.length > 0">
     <div class="carousel-wrapper" @mouseenter="pauseAutoPlay" @mouseleave="resumeAutoPlay">
       <!-- 轮播图片容器 -->
-      <div class="carousel-track" :class="{ 'no-transition': skipTransition }"
-        :style="{ transform: `translateX(-${currentIndex * 100}%)` }" @transitionend="handleTransitionEnd">
+      <div class="carousel-track" :class="{ 'no-transition': skipTransition || isDragging }"
+        :style="{ transform: `translateX(calc(-${currentIndex * 100}% + ${dragOffset}%))` }"
+        @transitionend="handleTransitionEnd" @touchstart="handleTouchStart" @touchmove="handleTouchMove"
+        @touchend="handleTouchEnd">
         <!-- 克隆最后一张到最前面（prepend） -->
         <div class="carousel-slide">
           <div class="image-wrapper">
@@ -71,6 +73,13 @@
   const skipTransition = ref(false) // 是否跳过过渡动画（用于无缝跳转）
   let autoPlayTimer = null
   const autoPlayInterval = 4000 // 4秒切换一次
+
+  // 触摸滑动相关
+  const touchStartX = ref(0)
+  const touchStartY = ref(0)
+  const touchStartTime = ref(0)
+  const isDragging = ref(false)
+  const dragOffset = ref(0) // 当前拖拽偏移量（百分比）
 
   // 计算真实索引（用于指示器显示）
   const realIndex = computed(() => {
@@ -178,6 +187,70 @@
     }, autoPlayInterval)
   }
 
+  // 触摸开始
+  const handleTouchStart = (e) => {
+    pauseAutoPlay() // 暂停自动播放
+    touchStartX.value = e.touches[0].clientX
+    touchStartY.value = e.touches[0].clientY
+    touchStartTime.value = Date.now()
+    isDragging.value = true
+    dragOffset.value = 0
+  }
+
+  // 触摸移动
+  const handleTouchMove = (e) => {
+    if (!isDragging.value) return
+
+    const touchX = e.touches[0].clientX
+    const touchY = e.touches[0].clientY
+    const deltaX = touchX - touchStartX.value
+    const deltaY = touchY - touchStartY.value
+
+    // 如果是垂直滑动，不处理（允许页面滚动）
+    if (Math.abs(deltaY) > Math.abs(deltaX)) {
+      return
+    }
+
+    // 阻止默认滚动行为
+    e.preventDefault()
+
+    // 计算拖拽偏移量（相对于轮播图宽度的百分比）
+    const carouselWidth = e.currentTarget.offsetWidth
+    dragOffset.value = (deltaX / carouselWidth) * 100
+  }
+
+  // 触摸结束
+  const handleTouchEnd = (e) => {
+    if (!isDragging.value) return
+
+    const touchEndX = e.changedTouches[0].clientX
+    const touchEndTime = Date.now()
+    const deltaX = touchEndX - touchStartX.value
+    const deltaTime = touchEndTime - touchStartTime.value
+    const carouselWidth = e.currentTarget.offsetWidth
+    const swipeDistance = Math.abs(deltaX)
+    const swipeSpeed = swipeDistance / deltaTime // 像素/毫秒
+
+    // 判断是否触发切换：滑动距离超过30%或滑动速度超过0.3像素/毫秒
+    const threshold = carouselWidth * 0.3
+    const speedThreshold = 0.3
+
+    if (swipeDistance > threshold || swipeSpeed > speedThreshold) {
+      if (deltaX > 0) {
+        // 向右滑动，显示上一张
+        prevSlide()
+      } else {
+        // 向左滑动，显示下一张
+        nextSlide()
+      }
+    }
+
+    // 重置状态
+    isDragging.value = false
+    dragOffset.value = 0
+    resumeAutoPlay() // 恢复自动播放
+  }
+
   onMounted(() => {
     // 初始位置：必须立即（没有动画）定位到真实的第一张图（索引1）
     skipTransition.value = true
@@ -279,7 +352,7 @@
     height: 50px;
     border: none;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
     color: #2c3e50;
     font-size: 28px;
@@ -355,18 +428,9 @@
       border-radius: 15px;
     }
 
+    /* 移动端隐藏左右按钮 */
     .carousel-btn {
-      width: 40px;
-      height: 40px;
-      font-size: 24px;
-    }
-
-    .prev-btn {
-      left: 10px;
-    }
-
-    .next-btn {
-      right: 10px;
+      display: none;
     }
 
     .carousel-indicators {
@@ -381,6 +445,12 @@
 
     .indicator.active {
       width: 24px;
+    }
+
+    /* 触摸滑动时禁用过渡动画 */
+    .carousel-track {
+      touch-action: pan-y;
+      /* 允许垂直滚动，但处理水平滑动 */
     }
   }
 

@@ -9,11 +9,12 @@
         <p class="content-text" v-html="post.content.replace(/\n/g, '<br/>')"></p>
         <div v-if="post.images && post.images.length > 0" class="image-gallery">
           <div v-if="post.images.length === 1" class="image-wrapper single-image">
-            <img :src="post.images[0]" alt="post image" class="gallery-image" />
+            <img :src="post.images[0]" alt="post image" class="gallery-image"
+              @click="openImageViewer(post.images[0])" />
           </div>
           <div v-else class="image-grid" :class="{ 'four-grid': post.images.length === 4 }">
             <div v-for="(image, index) in post.images" :key="index" class="image-wrapper grid-image">
-              <img :src="image" alt="post image" class="gallery-image" />
+              <img :src="image" alt="post image" class="gallery-image" @click="openImageViewer(image)" />
             </div>
           </div>
         </div>
@@ -27,11 +28,16 @@
         {{ isLoading ? '加载中...' : '加载更多' }}
       </button>
     </div>
+
+    <!-- 图片预览遮罩层 -->
+    <div v-if="viewerImage" class="image-viewer" @click="closeImageViewer">
+      <img :src="viewerImage" alt="预览图片" class="viewer-image" @click.stop />
+    </div>
   </div>
 </template>
 
 <script setup>
-  import { ref, onMounted, computed } from 'vue'
+  import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
   import momentsData from '@/data/moments.json'
   import avatarImage from '@/assets/images/home/avatar.jpg'
 
@@ -86,6 +92,28 @@
       isLoading.value = false
     }, 500)
   }
+
+  // 图片预览相关
+  const viewerImage = ref(null)
+
+  // 打开图片预览
+  const openImageViewer = (imageSrc) => {
+    viewerImage.value = imageSrc
+    // 禁止背景滚动
+    document.body.style.overflow = 'hidden'
+  }
+
+  // 关闭图片预览
+  const closeImageViewer = () => {
+    viewerImage.value = null
+    // 恢复背景滚动
+    document.body.style.overflow = ''
+  }
+
+  // 组件卸载时恢复背景滚动
+  onBeforeUnmount(() => {
+    document.body.style.overflow = ''
+  })
 </script>
 
 <style scoped>
@@ -164,6 +192,12 @@
     display: block;
     object-fit: cover;
     /* 保证图片被裁剪填充，不变形 */
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .gallery-image:hover {
+    opacity: 0.9;
   }
 
   /* --- 图片布局核心逻辑 --- */
@@ -231,24 +265,30 @@
     }
 
     .avatar-img {
-      width: 30px;
-      height: 30px;
+      width: 34px;
+      height: 34px;
     }
 
     .nickname {
-      font-size: 12px;
+      font-size: 14px;
     }
 
     .content-text {
-      font-size: 12px;
+      font-size: 14px;
+    }
+
+    .timestamp {
+      font-size: 11px;
     }
 
     .image-grid {
       grid-template-columns: repeat(3, calc((100% - 8px) / 3));
+      max-width: 200px;
     }
 
     .image-grid.four-grid {
       grid-template-columns: repeat(2, calc((100% - 4px) / 2));
+      max-width: 200px;
     }
 
     .grid-image {
@@ -258,7 +298,12 @@
     }
 
     .single-image {
-      max-width: 100%;
+      max-width: 180px;
+      max-height: 240px;
+    }
+
+    .single-image .gallery-image {
+      max-height: 240px;
     }
   }
 
@@ -288,5 +333,59 @@
 
   .load-more-btn:active {
     transform: scale(0.98);
+  }
+
+  /* 图片预览遮罩层 */
+  .image-viewer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .viewer-image {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    cursor: default;
+    animation: zoomIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes zoomIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    .viewer-image {
+      max-width: 95%;
+      max-height: 95%;
+    }
   }
 </style>

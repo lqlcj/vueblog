@@ -9,22 +9,15 @@
 <script setup>
   import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-  // 问候语文本
-  const greetingText = ref('Good evening, Traveler.')
+  // --- 核心修改在这里 ---
 
-  // 获取中国时区（UTC+8）的当前小时
-  const getChinaHour = () => {
-    const now = new Date()
-    // 获取UTC时间
-    const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000)
-    // 转换为中国时区（UTC+8）
-    const chinaTime = new Date(utcTime + (8 * 3600000))
-    return chinaTime.getHours()
-  }
+  // 1. 删除了所有复杂的 getChinaHour 函数
+  //    我们不需要关心中国时区，只需要关心你电脑的本地时间
 
-  // 根据当前时间获取问候语
+  // 2. 修改 getGreeting 函数，让它使用最简单的本地时间
   const getGreeting = () => {
-    const hour = getChinaHour()
+    // 核心：直接获取用户电脑的本地小时
+    const hour = new Date().getHours()
 
     // 6:00-11:00 早上
     if (hour >= 6 && hour < 11) {
@@ -39,6 +32,11 @@
       return 'Good evening, Traveler.'
     }
   }
+
+  // 3. 用【本地时间】来初始化 ref
+  const greetingText = ref(getGreeting())
+
+  // --- 后面的逻辑都是你原来的，它们是正确的 ---
 
   // 更新问候语
   const updateGreeting = () => {

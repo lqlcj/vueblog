@@ -1,33 +1,12 @@
 <!-- 
-  个人信息和功能卡片合并组件
-  功能：
-  1. 个人信息展示（头像、名字、简介、按钮）
-  2. 功能卡片网格（文章、关于、留言等）
-  3. 年度进度条显示
+  功能卡片网格组件
+  功能：展示网站主要功能入口（文章、朋友圈、留言等），包含动画效果和交互
 -->
 
 <template>
   <div class="profile-container">
     <!-- ========== 个人信息卡片 ========== -->
-    <!-- 功能：展示个人基本信息，包含3D视差效果和打字机动画 -->
-    <div class="profile-card glass-panel" ref="cardRef" :style="cardStyle" @mouseleave="resetCard"
-      @mousemove="handleMouseMove">
-      <div class="card-content">
-        <!-- 头像占位符 -->
-        <div class="avatar-wrapper">
-          <img :src="heroAvatar" alt="个人头像" class="avatar-img" />
-        </div>
-
-        <!-- 名字标题 -->
-        <h1 class="name">Hello, I'm 元宵.</h1>
-
-        <!-- 打字机效果：动态显示 -->
-        <p class="role-text">喜欢 <span class="typing-cursor">{{ typedText }}</span></p>
-
-        <!-- 个人简介 -->
-        <p class="bio">白天写代码，晚上写点文字。<br>循序慢行，给生活加一点设计感。</p>
-      </div>
-    </div>
+    <PersonalInfo />
 
     <!-- ========== 功能卡片网格 ========== -->
     <!-- 功能：展示网站主要功能入口，包含动画效果和交互 -->
@@ -36,7 +15,20 @@
       <div class="grid-card glass-panel pointer delay-1" :class="{ 'is-activating': activeCard === 'notes' }"
         @click="handleCardClick('notes', () => router.push('/notes'))">
         <div class="icon-wrapper">
-          <div class="icon-box">📝</div>
+          <div class="icon-box">
+            <svg class="notes-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="200"
+              height="200">
+              <path
+                d="M60.19565 418.559608a31.99997 31.99997 0 0 0 31.99997-31.99997v-52.479951a31.99997 31.99997 0 0 0-63.99994 0v52.479951a31.99997 31.99997 0 0 0 31.99997 31.99997z"
+                fill="#6B400D"></path>
+              <path
+                d="M993.954775 518.079514a31.99997 31.99997 0 0 0-14.719987-19.519981l-111.039895-63.99994a31.99997 31.99997 0 0 0-43.51996 11.519989L796.19496 495.359536V127.99988a95.99991 95.99991 0 0 0-95.99991-95.99991h-63.99994a31.99997 31.99997 0 0 0-31.99997-31.99997H220.1955a31.99997 31.99997 0 0 0-31.99997 31.99997H124.19559a95.99991 95.99991 0 0 0-95.99991 95.99991v69.439935a31.99997 31.99997 0 0 0 63.99994 0V127.99988a31.99997 31.99997 0 0 1 31.99997-31.99997h63.99994v15.999985a63.99994 63.99994 0 0 0 63.99994 63.99994h319.9997a63.99994 63.99994 0 0 0 63.99994-63.99994V95.99991h63.99994a31.99997 31.99997 0 0 1 31.99997 31.99997v478.079552l-155.519854 269.759747A29.759972 29.759972 0 0 0 572.19517 895.99916l9.919991 63.99994H124.19559a31.99997 31.99997 0 0 1-31.99997-31.99997V530.559503a31.99997 31.99997 0 0 0-63.99994 0V927.99913a95.99991 95.99991 0 0 0 95.99991 95.99991h495.999535a29.439972 29.439972 0 0 0 11.519989-2.239998l95.99991-36.159966a31.99997 31.99997 0 0 0 16.319985-13.759987l191.99982-332.799688 55.999947-95.99991a30.079972 30.079972 0 0 0 1.919999-24.959977zM252.19547 111.999895V63.99994h319.9997v47.999955z m611.839426 393.919631l55.359949 31.99997-23.999978 41.599961-49.279954-28.479974-6.079994-3.519996z m-170.879839 423.999602l-47.359956 18.239983-7.999992-50.239953 170.23984-295.039723 27.839974 15.999985 27.519974 15.999985z"
+                fill="#6B400D"></path>
+              <path
+                d="M636.19511 563.199472V287.99973a31.99997 31.99997 0 0 0-31.99997-31.99997H220.1955a31.99997 31.99997 0 0 0-31.99997 31.99997v543.99949a31.99997 31.99997 0 0 0 31.99997 31.99997h215.359798a63.99994 63.99994 0 0 0 55.359948-31.99997l136.639872-236.799778a63.99994 63.99994 0 0 0 8.639992-31.99997z"
+                fill="#FFC824"></path>
+            </svg>
+          </div>
         </div>
         <div class="card-info">
           <h3>文章</h3>
@@ -45,15 +37,43 @@
         <div class="hover-arrow">↗</div>
       </div>
 
-      <!-- 关于卡片 -->
-      <div class="grid-card glass-panel pointer delay-2" :class="{ 'is-activating': activeCard === 'about' }"
-        @click="handleCardClick('about', () => router.push('/about'))">
+      <!-- 朋友圈卡片 -->
+      <div class="grid-card glass-panel pointer delay-2" :class="{ 'is-activating': activeCard === 'friends' }"
+        @click="handleCardClick('friends', () => router.push('/friends'))">
         <div class="icon-wrapper">
-          <div class="icon-box">🙋</div>
+          <div class="icon-box">
+            <svg class="friends-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+              width="200" height="200">
+              <path
+                d="M381.8288 18.901489c42.635029-11.310603 86.403882-17.002232 130.205481-17.002232 68.479651 0 135.072325 13.469779 197.999516 40.101323l-8.362458 369.71439L381.8288 18.901489 381.8288 18.901489z"
+                fill="#F57659"></path>
+              <path
+                d="M71.201134 255.390621c22.278399-38.284955 49.218982-73.313749 80.134085-104.090707 48.393173-48.396243 104.980983-85.958744 168.285774-111.666242l255.614725 267.305999L71.201134 255.390621 71.201134 255.390621z"
+                fill="#F0B360"></path>
+              <path
+                d="M18.900977 642.275066c-11.276834-42.463114-17.000186-86.234013-17.000186-130.276089 0-68.548212 13.502525-135.140886 40.099277-197.933001l369.749182 8.293897L18.900977 642.275066 18.900977 642.275066z"
+                fill="#EFDE58"></path>
+              <path
+                d="M255.39011 952.798355c-38.010709-22.1423-72.968895-49.079812-104.021122-80.134085-48.428989-48.325635-85.993536-104.911398-111.664196-168.283728l267.302929-255.513418L255.39011 952.798355 255.39011 952.798355z"
+                fill="#BBEF5C"></path>
+              <path
+                d="M512.034281 1022.100744c-68.481697 0-135.072325-13.470803-197.999516-40.031738l8.362458-369.71439 319.843562 392.81348C599.535147 1016.411161 555.80211 1022.100744 512.034281 1022.100744L512.034281 1022.100744z"
+                fill="#61F15E"></path>
+              <path
+                d="M448.830797 717.096145l504.036631 51.54905c-22.107507 37.940101-48.976458 72.900334-80.167854 104.019075-48.327682 48.464805-104.980983 86.029352-168.283728 111.734804L448.830797 717.096145 448.830797 717.096145z"
+                fill="#5BE4EE"></path>
+              <path
+                d="M612.320335 701.707666l392.81348-319.915193c11.276834 42.499953 16.966417 86.302575 16.966417 130.206504 0 68.753897-13.502525 135.282103-40.066531 198.002586L612.320335 701.707666 612.320335 701.707666z"
+                fill="#5C9BF6"></path>
+              <path
+                d="M768.60989 71.235414c37.975916 22.038946 73.004711 48.942689 104.089683 80.0645 48.464805 48.326659 86.027305 104.980983 111.664196 168.284751l-267.302929 255.580956L768.60989 71.235414 768.60989 71.235414z"
+                fill="#6D58F1"></path>
+            </svg>
+          </div>
         </div>
         <div class="card-info">
-          <h3>关于</h3>
-          <p class="sub-text">关于这个网站</p>
+          <h3>朋友圈</h3>
+          <p class="sub-text">分享生活点滴</p>
         </div>
         <div class="hover-arrow">↗</div>
       </div>
@@ -62,7 +82,20 @@
       <div class="grid-card glass-panel pointer delay-3" :class="{ 'is-activating': activeCard === 'comments' }"
         @click="handleCardClick('comments', () => emit('scroll-to-comments'))">
         <div class="icon-wrapper">
-          <div class="icon-box">💬</div>
+          <div class="icon-box">
+            <svg class="comments-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+              width="200" height="200">
+              <path
+                d="M696.3 854.6c16.2 14.2 41.6 2.7 41.6-18.9V715.3h125.5c41.6 0 75.3-33.7 75.3-75.3V355.1H374c-41.6 0-75.3 33.7-75.3 75.3v284.9h238.4l159.2 139.3z"
+                fill="#F4C708"></path>
+              <path
+                d="M712.6 882.2c-11 0-21.7-3.9-30.4-11.6l-153.1-134H160.6c-53.3 0-96.6-43.4-96.6-96.6V238.4c0-53.3 43.4-96.6 96.6-96.6h702.8c53.3 0 96.6 43.4 96.6 96.6V640c0 53.3-43.4 96.6-96.6 96.6H759.2v99c0 18.5-10.4 34.6-27.3 42.3-6.2 2.9-12.8 4.3-19.3 4.3z m-552-697.7c-29.8 0-54 24.2-54 54V640c0 29.8 24.2 54 54 54h376.5c5.2 0 10.2 1.9 14 5.3l159.2 139.3c0.5 0.4 1.8 1.7 4 0.6 2.2-1 2.2-2.8 2.2-3.4V715.3c0-11.8 9.5-21.3 21.3-21.3h125.5c29.8 0 54-24.2 54-54V238.4c0-29.8-24.2-54-54-54H160.6z"
+                fill="#111111"></path>
+              <path d="M499.5 426.7m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#111111"></path>
+              <path d="M742.9 426.7m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#111111"></path>
+              <path d="M277.3 426.7m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#111111"></path>
+            </svg>
+          </div>
         </div>
         <div class="card-info">
           <h3>留言</h3>
@@ -72,26 +105,16 @@
       </div>
 
       <!-- 年度进度条卡片 -->
-      <!-- 功能：显示当前年份的进度百分比，包含动画效果 -->
-      <div class="stat-card glass-panel delay-4">
-        <div class="stat-header">
-          <span class="stat-title">今年进度</span>
-          <span class="stat-value" :key="displayProgress" :class="{ 'is-updating': isUpdating }">{{ displayProgress
-            }}%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" :style="{ width: barWidth + '%' }"></div>
-        </div>
-        <p class="stat-quote">时间过得真快</p>
-      </div>
+      <YearProgress />
     </div>
   </div>
 </template>
 
 <script setup>
-  import { ref, onMounted, computed, watch } from 'vue'
+  import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import heroAvatar from '@/assets/images/home/avatar.jpg'
+  import PersonalInfo from './PersonalInfo.vue'
+  import YearProgress from './YearProgress.vue'
 
   const router = useRouter()
   const emit = defineEmits(['scroll-to-comments'])
@@ -109,99 +132,6 @@
     }, 220)
   }
 
-  // ========== 打字机效果逻辑 ==========
-  // 功能：逐字显示文本，营造动态效果
-  const fullText = "Building for the Web."
-  const typedText = ref('')
-  let charIndex = 0
-  let typeTimer = null
-
-  const typeWriter = () => {
-    if (charIndex < fullText.length) {
-      typedText.value += fullText.charAt(charIndex)
-      charIndex++
-      typeTimer = setTimeout(typeWriter, 100)
-    }
-  }
-
-  // ========== 3D 视差效果逻辑 ==========
-  // 功能：根据鼠标位置实现卡片3D倾斜效果
-  const mouseX = ref(0)
-  const mouseY = ref(0)
-  const cardRef = ref(null)
-
-  const handleMouseMove = (e) => {
-    if (!cardRef.value) return
-    const rect = cardRef.value.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    mouseX.value = (x - rect.width / 2) / (rect.width / 2)
-    mouseY.value = (y - rect.height / 2) / (rect.height / 2)
-  }
-
-  const cardStyle = computed(() => ({
-    transform: `perspective(1000px) rotateX(${mouseY.value * -15}deg) rotateY(${mouseX.value * 15}deg)`,
-    willChange: 'transform'
-  }))
-
-  const resetCard = () => {
-    mouseX.value = 0
-    mouseY.value = 0
-  }
-
-  // ========== 年度进度条逻辑 ========== 
-  // 功能：计算并显示当前年份的进度百分比，包含动画效果
-  const displayProgress = ref('0.0')
-  const barWidth = ref(0)
-  const isUpdating = ref(false)
-
-  // 监听数字变化，触发跳动动画
-  watch(displayProgress, () => {
-    isUpdating.value = true
-    setTimeout(() => {
-      isUpdating.value = false
-    }, 300)
-  })
-
-  onMounted(() => {
-    // 启动打字机效果
-    typeWriter()
-
-    // 启动年度进度条动画
-    const now = new Date()
-    const start = new Date(now.getFullYear(), 0, 0)
-    const diff = now - start
-    const oneDay = 1000 * 60 * 60 * 24
-    const day = Math.floor(diff / oneDay)
-    const isLeap = (year) => new Date(year, 1, 29).getMonth() === 1
-    const daysInYear = isLeap(now.getFullYear()) ? 366 : 365
-    const targetVal = (day / daysInYear) * 100
-
-    // 延迟启动动画，让页面先渲染
-    setTimeout(() => {
-      // 进度条宽度动画
-      barWidth.value = targetVal
-
-      // 数字跳动动画
-      let startVal = 0
-      const duration = 1500
-      const startTime = performance.now()
-
-      const animateNumber = (currentTime) => {
-        const elapsed = currentTime - startTime
-        const progress = Math.min(elapsed / duration, 1)
-        const ease = 1 - Math.pow(1 - progress, 4)
-        const currentNum = startVal + (targetVal - startVal) * ease
-        displayProgress.value = currentNum.toFixed(1)
-
-        if (progress < 1) {
-          requestAnimationFrame(animateNumber)
-        }
-      }
-
-      requestAnimationFrame(animateNumber)
-    }, 500)
-  })
 </script>
 
 <style scoped>
@@ -212,6 +142,7 @@
     grid-template-columns: 0.9fr 1fr;
     gap: 24px;
     width: 100%;
+    padding: 0 15px;
   }
 
   /* ========== 玻璃态基础样式（参考 InfoCards） ========== */
@@ -228,88 +159,6 @@
     transform: translateY(-4px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     border-color: #c4b5a0;
-  }
-
-  /* ========== 个人信息卡片样式 ========== */
-  .profile-card {
-    padding: 40px 30px;
-    transition: transform 0.1s ease-out, filter 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    transform-style: preserve-3d;
-    position: relative;
-  }
-
-  .profile-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    border-color: #c4b5a0;
-  }
-
-  .card-content {
-    position: relative;
-    z-index: 2;
-  }
-
-  .avatar-wrapper {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-bottom: 20px;
-    border: 2px solid rgba(44, 62, 80, 0.1);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .avatar-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    border-radius: 16px;
-    filter: contrast(95%) brightness(105%) sepia(10%);
-    transition: filter 0.3s ease;
-  }
-
-  .avatar-img:hover {
-    filter: none;
-  }
-
-  .name {
-    font-size: 2.4rem;
-    font-weight: 400;
-    margin: 0;
-    color: #2c3e50;
-    line-height: 1.1;
-    letter-spacing: 2px;
-    font-family: 'Caveat', 'Conv_FuturaStd-Book', cursive;
-  }
-
-  .role-text {
-    font-size: 1.2rem;
-    color: #666;
-    margin: 10px 0 20px;
-    font-family: monospace;
-  }
-
-  .bio {
-    font-size: 1rem;
-    color: #888;
-    line-height: 1.6;
-    margin-bottom: 30px;
-  }
-
-  .typing-cursor::after {
-    content: '|';
-    animation: blink 1s infinite;
-  }
-
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
   }
 
   /* ========== 功能卡片网格样式 ========== */
@@ -368,7 +217,22 @@
     transition: transform 0.3s ease;
   }
 
+  .friends-icon,
+  .notes-icon,
+  .comments-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
   .grid-card:hover .icon-box {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .grid-card:hover .friends-icon,
+  .grid-card:hover .notes-icon,
+  .grid-card:hover .comments-icon {
     transform: scale(1.1) rotate(5deg);
   }
 
@@ -401,74 +265,6 @@
     opacity: 1;
   }
 
-  /* ========== 年度进度条卡片样式 ========== */
-  .stat-card {
-    grid-column: 1 / -1;
-    padding: 24px;
-  }
-
-  .stat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-
-  .stat-title {
-    font-size: 1rem;
-    color: #666;
-    font-weight: 500;
-  }
-
-  .stat-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #2c3e50;
-    display: inline-block;
-    transition: transform 0.2s ease;
-  }
-
-  .stat-value.is-updating {
-    animation: numberBounce 0.3s ease;
-  }
-
-  @keyframes numberBounce {
-    0% {
-      transform: scale(1);
-    }
-
-    50% {
-      transform: scale(1.3);
-    }
-
-    100% {
-      transform: scale(1);
-    }
-  }
-
-  .progress-bar {
-    width: 100%;
-    height: 8px;
-    background: rgba(44, 62, 80, 0.1);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 12px;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #6c5ce7 0%, #a29bfe 100%);
-    border-radius: 4px;
-    transition: width 1.5s ease;
-  }
-
-  .stat-quote {
-    font-size: 0.85rem;
-    color: #999;
-    margin: 0;
-    font-style: italic;
-  }
-
   /* ========== 进场动画 ========== */
   .delay-1 {
     animation: fadeInUp 0.6s ease 0.1s both;
@@ -482,9 +278,6 @@
     animation: fadeInUp 0.6s ease 0.3s both;
   }
 
-  .delay-4 {
-    animation: fadeInUp 0.6s ease 0.4s both;
-  }
 
   @keyframes fadeInUp {
     from {
@@ -503,27 +296,11 @@
     .profile-container {
       grid-template-columns: 1fr;
       gap: 20px;
+      padding: 0 15px;
     }
 
     .dashboard-grid {
       grid-template-columns: 1fr;
-    }
-
-    .stat-card {
-      grid-column: 1;
-    }
-
-    .profile-card {
-      padding: 30px 20px;
-    }
-
-    .name {
-      font-size: 2.1rem;
-    }
-
-    .avatar-wrapper {
-      width: 64px;
-      height: 64px;
     }
   }
 
@@ -531,14 +308,12 @@
   @media (prefers-reduced-motion: reduce) {
 
     .glass-panel,
-    .grid-card,
-    .profile-card {
+    .grid-card {
       transition: none;
     }
 
     .glass-panel:hover,
-    .grid-card:hover,
-    .profile-card:hover {
+    .grid-card:hover {
       transform: none;
     }
 

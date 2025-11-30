@@ -118,14 +118,17 @@
       max-width: 100%;
       /* 3. 高度自适应 */
       height: auto;
+      min-height: 60px;
       /* 4. 保持横向布局：Logo在左，菜单在右 */
       flex-direction: row;
       margin: 0;
-      padding: 10px 15px;
+      padding: 15px 15px;
       /* 5. 添加背景和阴影，让底部导航更明显 */
       background-color: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      /* 确保内容垂直居中 */
+      align-items: center;
     }
 
     .header .logo {
@@ -142,12 +145,20 @@
       flex: 1;
       /* 恢复 gap 控制间距 */
       gap: 0;
+      /* 确保菜单项垂直居中 */
+      align-items: center;
+      height: 100%;
     }
 
     .header .menu a {
       /* 手机上字号稍微改小一点 */
       font-size: 0.9rem;
       margin: 0;
+      /* 确保文字垂直居中 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
     }
 
   }

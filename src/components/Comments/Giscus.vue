@@ -202,15 +202,12 @@
 
 <style scoped>
   .comments-container {
-    margin-top: 40px;
+    margin-top: 0;
     padding: 0;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(224, 195, 252, 0.3);
-    border-radius: 16px;
-    box-shadow:
-      0 4px 20px rgba(224, 195, 252, 0.15),
-      0 1px 4px rgba(0, 0, 0, 0.05);
+    background: #faf9f6;
+    border: 1px solid #d4c5b0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
@@ -218,11 +215,9 @@
   }
 
   .comments-container:hover {
-    transform: translateY(-1px);
-    box-shadow:
-      0 6px 25px rgba(224, 195, 252, 0.2),
-      0 2px 6px rgba(0, 0, 0, 0.08);
-    border-color: rgba(224, 195, 252, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-color: #c4b5a0;
   }
 
   .comments-container::before {
@@ -241,7 +236,7 @@
   }
 
   .comments-header {
-    padding: 20px 24px 16px;
+    padding: 12px 20px 10px;
     text-align: center;
     border-bottom: 1px solid rgba(224, 195, 252, 0.2);
     background: linear-gradient(135deg,
@@ -251,10 +246,25 @@
     z-index: 1;
   }
 
+  /* 电脑端：标题和描述居中显示 */
+  @media (min-width: 769px) {
+    .comments-header {
+      text-align: center;
+    }
+
+    .comments-title {
+      text-align: center;
+    }
+
+    .comments-subtitle {
+      text-align: center;
+    }
+  }
+
   .comments-title {
     font-family: 'Caveat', cursive;
-    font-size: 1.6rem;
-    margin: 0 0 4px 0;
+    font-size: 1.5rem;
+    margin: 0 0 3px 0;
     color: #6c5ce7;
     font-weight: 500;
     background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
@@ -274,9 +284,9 @@
     width: 100%;
     position: relative;
     z-index: 1;
-    padding: 16px 24px 24px;
+    padding: 12px 20px 16px;
     background: transparent;
-    max-height: 600px;
+    max-height: 500px;
     overflow-y: auto;
     overflow-x: hidden;
   }
@@ -303,30 +313,74 @@
   }
 
   .loading-state {
-    padding: 40px 24px;
+    padding: 60px 24px;
     text-align: center;
     color: #999;
+    position: relative;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .loading-spinner {
-    width: 32px;
-    height: 32px;
-    margin: 0 auto 16px;
-    border: 3px solid rgba(162, 155, 254, 0.2);
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 20px;
+    position: relative;
+  }
+
+  .loading-spinner::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 4px solid rgba(162, 155, 254, 0.15);
     border-top-color: #6c5ce7;
+    border-right-color: #a29bfe;
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
 
+  .loading-spinner::after {
+    content: '';
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 20%;
+    border: 3px solid rgba(162, 155, 254, 0.2);
+    border-bottom-color: #a29bfe;
+    border-left-color: #6c5ce7;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite reverse;
+  }
+
   @keyframes spin {
-    to {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
       transform: rotate(360deg);
     }
   }
 
   .loading-state p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    color: #6c5ce7;
+    font-weight: 500;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
   }
 
   .error-fallback {
@@ -390,20 +444,20 @@
     }
 
     .comments-header {
-      padding: 16px 20px 12px;
+      padding: 10px 16px 8px;
     }
 
     .comments-title {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
     }
 
     .comments-subtitle {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
     }
 
     .giscus-wrapper {
-      padding: 12px 16px 20px;
-      max-height: 500px;
+      padding: 10px 16px 14px;
+      max-height: 400px;
     }
 
     .error-fallback {
@@ -411,8 +465,3 @@
     }
   }
 </style>
-
-
-
-
-
