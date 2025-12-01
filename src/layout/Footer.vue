@@ -23,7 +23,7 @@
           <a href="https://twitter.com/Cli13146688" target="_blank" class="social-btn twitter">TWITTER</a>
         </div>
 
-        <span class="copyright">LCJ.ORG.2019</span>
+        <span class="copyright">LCJLQ.COM.2025</span>
       </div>
 
     </div>
