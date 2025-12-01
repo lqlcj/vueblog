@@ -59,8 +59,8 @@
   import { ref, computed, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { useNotesStore } from '@/stores/notesStore';
-  import defaultCover from '@/assets/images/loading.jpg';
-  import defaultAvatar from '@/assets/images/home/avatar.jpg';
+  import defaultCover from '@/assets/images/loading.webp';
+  import defaultAvatar from '@/assets/images/home/avatar.webp';
   // 导入可复用的页面标题组件
   import PageHeader from '@/components/HeaderBar/PageHeader.vue';
 

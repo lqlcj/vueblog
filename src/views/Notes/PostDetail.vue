@@ -38,7 +38,7 @@
   import { ref, onMounted, computed } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useNotesStore } from '@/stores/notesStore';
-  import defaultCover from '@/assets/images/loading.jpg';
+  import defaultCover from '@/assets/images/loading.webp';
   // 保持依赖动态导入，解决 820KB bloat 问题
   import { default as MarkdownIt } from 'markdown-it';
 

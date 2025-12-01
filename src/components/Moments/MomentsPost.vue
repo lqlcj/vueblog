@@ -39,7 +39,7 @@
 <script setup>
   import { ref, onBeforeUnmount, computed } from 'vue'
   import momentsData from '@/data/moments.json'
-  import avatarImage from '@/assets/images/home/avatar.jpg'
+  import avatarImage from '@/assets/images/home/avatar.webp'
 
   // 预加载 Moments 目录下的所有图片，生成一个「路径 -> 图片」映射
   const rawMomentImages = import.meta.glob('../../assets/images/Moments/*', {
@@ -61,8 +61,8 @@
     if (!path) return path
 
     if (
-      path === '@/assets/images/home/avatar.jpg' ||
-      path === '/src/assets/images/home/avatar.jpg'
+      path === '@/assets/images/home/avatar.webp' ||
+      path === '/src/assets/images/home/avatar.webp'
     ) {
       return avatarImage
     }

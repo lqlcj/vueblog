@@ -2,7 +2,7 @@
   <header class="header">
     <div class="logo">
       <router-link to="/Home">
-        <img alt="logo" src="../assets/images/logo.png" />
+        <img alt="logo" src="../assets/images/logo.webp" />
       </router-link>
     </div>
 

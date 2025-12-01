@@ -44,7 +44,7 @@
 
 <script setup>
   import { ref, onMounted } from 'vue'
-  import defaultAvatar from '@/assets/images/home/avatar.jpg'
+  import defaultAvatar from '@/assets/images/home/avatar.webp'
 
   const friends = ref([])
   const confirmingIndex = ref(null)

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useLoadingStore } from "@/stores/loadingStore";
 
 // Welcome 页面直接导入，确保打开网页时第一时间加载
 import Welcome from "@/views/Welcome/index.vue";
@@ -52,6 +53,21 @@ const router = createRouter({
     // 每次跳转都回到顶部
     return { top: 0 };
   },
+});
+
+// 全局路由级 Loading：在路由切换时显示遮罩，完成后隐藏
+router.beforeEach((to, from, next) => {
+  const loadingStore = useLoadingStore();
+  loadingStore.show();
+  next();
+});
+
+router.afterEach(() => {
+  const loadingStore = useLoadingStore();
+  // 稍微延迟一下，确保页面完成首屏渲染再关闭
+  setTimeout(() => {
+    loadingStore.hide();
+  }, 200);
 });
 
 export default router;

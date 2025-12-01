@@ -19,8 +19,8 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, computed } from 'vue'
-  import heroAvatar from '@/assets/images/home/avatar.jpg'
+  import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+  import heroAvatar from '@/assets/images/home/avatar.webp'
 
   // ========== 打字机效果逻辑 ==========
   // 功能：逐字显示文本，营造动态效果，循环显示两段文字2次

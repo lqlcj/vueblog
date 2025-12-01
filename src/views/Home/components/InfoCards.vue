@@ -58,7 +58,7 @@
       description: '视频平台',
       link: 'https://www.bilibili.com',
       external: true,
-      backgroundImage: '/images/02.jpg'
+      backgroundImage: '/images/02.webp'
     },
     {
       type: 'github',
@@ -66,7 +66,7 @@
       description: '代码仓库',
       link: 'https://gitee.com',
       external: true,
-      backgroundImage: '/images/03.jpg'
+      backgroundImage: '/images/03.webp'
     }
   ]
 

@@ -20,6 +20,9 @@
     <Footer />
 
     <BackToTop />
+
+    <!-- 全局路由 Loading 遮罩 -->
+    <PageLoading />
   </div>
 </template>
 
@@ -44,6 +47,7 @@
   import BackToTop from '@/components/BackToTop/BackToTop.vue';
   // 导入错误边界组件
   import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary.vue';
+  import PageLoading from '@/components/Common/PageLoading.vue';
 </script>
 
 <style scoped>
@@ -52,7 +56,7 @@
     display: flex;
     flex-direction: column;
     /* 🔴 恢复原样：完全保留你原本的背景写法，不做任何缩放或固定 */
-    background-image: url("@/assets/images/background-body.png");
+    background-image: url("@/assets/images/background-body.webp");
   }
 
   /* 新增布局样式：只负责撑开高度，不涉及颜色或图片 */
@@ -65,7 +69,8 @@
   /* 移动端：为底部固定导航栏留出空间 */
   @media (max-width: 768px) {
     .main-content {
-      padding-bottom: 70px; /* 为底部导航栏留出空间 */
+      padding-bottom: 70px;
+      /* 为底部导航栏留出空间 */
     }
   }
 </style>

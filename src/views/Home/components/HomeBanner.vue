@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-  import logoImage from '@/assets/images/Logo2.png'
+  import logoImage from '@/assets/images/Logo2.webp'
 </script>
 
 <style scoped>

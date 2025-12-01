@@ -2,8 +2,8 @@
 
 import { defineStore } from "pinia";
 import fm from "front-matter";
-import defaultCover from "@/assets/images/loading.jpg";
-import defaultAvatar from "@/assets/images/home/avatar.jpg";
+import defaultCover from "@/assets/images/loading.webp";
+import defaultAvatar from "@/assets/images/home/avatar.webp";
 
 // Notes 数据仓库
 export const useNotesStore = defineStore("notes", {
