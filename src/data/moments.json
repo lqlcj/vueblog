@@ -8,12 +8,12 @@
     "content": "本汪今日份可爱已加载完毕～ 请查收🥰 （附：求摸摸、求零食、求贴贴！）",
     "timestamp": "创建时间: 2025-05-20 12:00:00",
     "images": [
-      "@/src/assets/images/Moments/dog-01.jpg",
-      "@/src/assets/images/Moments/dog-02.jpg",
-      "@/src/assets/images/Moments/dog-03.jpg",
-      "@/src/assets/images/Moments/dog-04.jpg",
-      "@/src/assets/images/Moments/dog-05.jpg",
-      "@/src/assets/images/Moments/dog-06.jpg"
+      "@/assets/images/Moments/dog-01.jpg",
+      "@/assets/images/Moments/dog-02.jpg",
+      "@/assets/images/Moments/dog-03.jpg",
+      "@/assets/images/Moments/dog-04.jpg",
+      "@/assets/images/Moments/dog-05.jpg",
+      "@/assets/images/Moments/dog-06.jpg"
     ]
   },
   {
@@ -25,8 +25,8 @@
     "content": "偷得浮生半日闲，一杯咖啡，一卷书，悠然自得",
     "timestamp": "创建时间: 2025-05-20 12:00:00",
     "images": [
-      "/src/assets/images/Moments/coffe1.jpg",
-      "/src/assets/images/Moments/coffe2.jpg"
+      "@/assets/images/Moments/coffe1.jpg",
+      "@/assets/images/Moments/coffe2.jpg"
     ]
   },
   {

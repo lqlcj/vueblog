@@ -40,10 +40,28 @@
   import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
   import momentsData from '@/data/moments.json'
   import avatarImage from '@/assets/images/home/avatar.jpg'
+  
+  // 导入所有 Moments 图片
+  import dog01 from '@/assets/images/Moments/dog-01.jpg'
+  import dog02 from '@/assets/images/Moments/dog-02.jpg'
+  import dog03 from '@/assets/images/Moments/dog-03.jpg'
+  import dog04 from '@/assets/images/Moments/dog-04.jpg'
+  import dog05 from '@/assets/images/Moments/dog-05.jpg'
+  import dog06 from '@/assets/images/Moments/dog-06.jpg'
+  import coffe1 from '@/assets/images/Moments/coffe1.jpg'
+  import coffe2 from '@/assets/images/Moments/coffe2.jpg'
 
   // 路径映射：将 @/ 开头的路径转换为实际导入的图片
   const pathMap = {
-    '@/assets/images/home/avatar.jpg': avatarImage
+    '@/assets/images/home/avatar.jpg': avatarImage,
+    '@/assets/images/Moments/dog-01.jpg': dog01,
+    '@/assets/images/Moments/dog-02.jpg': dog02,
+    '@/assets/images/Moments/dog-03.jpg': dog03,
+    '@/assets/images/Moments/dog-04.jpg': dog04,
+    '@/assets/images/Moments/dog-05.jpg': dog05,
+    '@/assets/images/Moments/dog-06.jpg': dog06,
+    '@/assets/images/Moments/coffe1.jpg': coffe1,
+    '@/assets/images/Moments/coffe2.jpg': coffe2
   }
 
   // 处理图片路径
