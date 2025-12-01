@@ -4,15 +4,14 @@
     <div class="content-scroll">
       <section ref="heroSection" class="section scroll-item text-center">
         <h1 class="main-title">
-          <span class="handwritten">Welcome to my</span><br />
-          Digital Garden.
+          <span class="handwritten">Welcome to my Garden</span>
         </h1>
         <p class="intro-text">
-          这里没有复杂的代码，只有一些关于创造的故事。<br />
-          回归最纯粹的记录，一个安静记录想法的地方。
+          <br />
+          安静记录想法的地方...
         </p>
         <div v-show="showScrollIndicator" class="scroll-indicator">
-          <span>↓ 向下探索旅程</span>
+          <span>↓ 向下探索</span>
         </div>
       </section>
       <section ref="footerSection" class="section footer-section text-center scroll-item">

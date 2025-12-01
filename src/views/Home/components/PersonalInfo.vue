@@ -10,7 +10,7 @@
       </div>
 
       <!-- 名字标题 -->
-      <h1 class="name">Hello，我是Leyili.</h1>
+      <h1 class="name">Hello,I'm Lcj.</h1>
 
       <!-- 打字机效果：动态显示 -->
       <p class="role-text" v-html="displayText"></p>
