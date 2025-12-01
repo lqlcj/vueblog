@@ -22,11 +22,11 @@
       "nickname": "Leyili",
       "avatar": "@/assets/images/home/avatar.jpg"
     },
-    "content": "不乖乖睡觉的孩子会到月球罚站。",
+    "content": "偷得浮生半日闲，一杯咖啡，一卷书，悠然自得",
     "timestamp": "创建时间: 2025-05-20 12:00:00",
     "images": [
-      "https://placehold.co/100x100/50E3C2/white?text=A",
-      "https://placehold.co/100x100/4A4A4A/white?text=B"
+      "/src/assets/images/Moments/coffe1.jpg",
+      "/src/assets/images/Moments/coffe2.jpg"
     ]
   },
   {
