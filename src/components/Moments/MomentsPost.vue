@@ -48,9 +48,11 @@
   })
 
   const momentsImageMap = Object.entries(rawMomentImages).reduce((acc, [key, value]) => {
-    // 将像 ../assets/... 这样的相对路径统一转换为 JSON 使用的 @/assets/... 形式
-    const normalizedKey = key.replace(/^\.\.\//, '@/')
-    acc[normalizedKey] = value
+    // 将 ../assets/... 转成 /src/... 方便 JSON 里直接使用 /src 路径
+    const absoluteKey = key.replace(/^\.\.\//, '/src/')
+    acc[absoluteKey] = value
+    // 兼容旧数据里继续使用 @/ 前缀
+    acc[absoluteKey.replace(/^\/src\//, '@/')] = value
     return acc
   }, {})
 
@@ -58,11 +60,17 @@
   const resolveImagePath = (path) => {
     if (!path) return path
 
-    if (path === '@/assets/images/home/avatar.jpg') {
+    if (
+      path === '@/assets/images/home/avatar.jpg' ||
+      path === '/src/assets/images/home/avatar.jpg'
+    ) {
       return avatarImage
     }
 
-    if (path.startsWith('@/assets/images/Moments/')) {
+    if (
+      path.startsWith('@/assets/images/Moments/') ||
+      path.startsWith('/src/assets/images/Moments/')
+    ) {
       return momentsImageMap[path] || path
     }
 
