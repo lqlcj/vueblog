@@ -8,12 +8,12 @@
     "content": "本汪今日份可爱已加载完毕～ 请查收🥰 （附：求摸摸、求零食、求贴贴！）",
     "timestamp": "创建时间: 2025-05-20 12:00:00",
     "images": [
-      "@/assets/images/Moments/dog-01.jpg",
-      "@/assets/images/Moments/dog-02.jpg",
-      "@/assets/images/Moments/dog-03.jpg",
-      "@/assets/images/Moments/dog-04.jpg",
-      "@/assets/images/Moments/dog-05.jpg",
-      "@/assets/images/Moments/dog-06.jpg"
+      "/src/assets/images/Moments/dog-01.jpg",
+      "/src/assets/images/Moments/dog-02.jpg",
+      "/src/assets/images/Moments/dog-03.jpg",
+      "/src/assets/images/Moments/dog-04.jpg",
+      "/src/assets/images/Moments/dog-05.jpg",
+      "/src/assets/images/Moments/dog-06.jpg"
     ]
   },
   {
@@ -25,8 +25,8 @@
     "content": "偷得浮生半日闲，一杯咖啡，一卷书，悠然自得",
     "timestamp": "创建时间: 2025-05-20 12:00:00",
     "images": [
-      "@/assets/images/Moments/coffe1.jpg",
-      "@/assets/images/Moments/coffe2.jpg"
+      "/src/assets/images/Moments/coffe1.jpg",
+      "/src/assets/images/Moments/coffe2.jpg"
     ]
   },
   {
@@ -35,10 +35,10 @@
       "nickname": "Leyili",
       "avatar": "@/assets/images/home/avatar.jpg"
     },
-    "content": "没有边角料 都是主旋律！\n这是第二行内容。",
+    "content": "吉卜力森林里的咖啡时光！\n把每个平凡日子过成童话。",
     "timestamp": "创建时间: 2025-05-20 12:00:00",
     "images": [
-      "https://placehold.co/300x400/E7B5D8/white?text=Single"
+      "/src/assets/images/Moments/coffe3.jpg"
     ]
   },
   {
@@ -50,10 +50,10 @@
     "content": "演示 4 张图的效果 (2x2 网格)",
     "timestamp": "创建时间: 2025-05-20 12:00:00",
     "images": [
-      "https://placehold.co/100x100/FF6B6B/white?text=S",
-      "https://placehold.co/100x100/FFD166/white?text=P",
-      "https://placehold.co/100x100/06D6A0/white?text=E",
-      "https://placehold.co/100x100/118AB2/white?text=C"
+      "/src/assets/images/Moments/401.jpg",
+      "/src/assets/images/Moments/402.jpg",
+      "/src/assets/images/Moments/403.jpg",
+      "/src/assets/images/Moments/404.jpg"
     ]
   },
   {

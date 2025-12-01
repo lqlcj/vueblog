@@ -37,38 +37,35 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+  import { ref, onBeforeUnmount, computed } from 'vue'
   import momentsData from '@/data/moments.json'
   import avatarImage from '@/assets/images/home/avatar.jpg'
-  
-  // 导入所有 Moments 图片
-  import dog01 from '@/assets/images/Moments/dog-01.jpg'
-  import dog02 from '@/assets/images/Moments/dog-02.jpg'
-  import dog03 from '@/assets/images/Moments/dog-03.jpg'
-  import dog04 from '@/assets/images/Moments/dog-04.jpg'
-  import dog05 from '@/assets/images/Moments/dog-05.jpg'
-  import dog06 from '@/assets/images/Moments/dog-06.jpg'
-  import coffe1 from '@/assets/images/Moments/coffe1.jpg'
-  import coffe2 from '@/assets/images/Moments/coffe2.jpg'
 
-  // 路径映射：将 @/ 开头的路径转换为实际导入的图片
-  const pathMap = {
-    '@/assets/images/home/avatar.jpg': avatarImage,
-    '@/assets/images/Moments/dog-01.jpg': dog01,
-    '@/assets/images/Moments/dog-02.jpg': dog02,
-    '@/assets/images/Moments/dog-03.jpg': dog03,
-    '@/assets/images/Moments/dog-04.jpg': dog04,
-    '@/assets/images/Moments/dog-05.jpg': dog05,
-    '@/assets/images/Moments/dog-06.jpg': dog06,
-    '@/assets/images/Moments/coffe1.jpg': coffe1,
-    '@/assets/images/Moments/coffe2.jpg': coffe2
-  }
+  // 预加载 Moments 目录下的所有图片，生成一个「路径 -> 图片」映射
+  const rawMomentImages = import.meta.glob('../assets/images/Moments/*', {
+    eager: true,
+    import: 'default'
+  })
+
+  const momentsImageMap = Object.entries(rawMomentImages).reduce((acc, [key, value]) => {
+    // 将像 ../assets/... 这样的相对路径统一转换为 JSON 使用的 @/assets/... 形式
+    const normalizedKey = key.replace(/^\.\.\//, '@/')
+    acc[normalizedKey] = value
+    return acc
+  }, {})
 
   // 处理图片路径
   const resolveImagePath = (path) => {
-    if (path && path.startsWith('@/')) {
-      return pathMap[path] || path
+    if (!path) return path
+
+    if (path === '@/assets/images/home/avatar.jpg') {
+      return avatarImage
     }
+
+    if (path.startsWith('@/assets/images/Moments/')) {
+      return momentsImageMap[path] || path
+    }
+
     return path
   }
 
