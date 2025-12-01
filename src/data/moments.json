@@ -8,12 +8,12 @@
     "content": "本汪今日份可爱已加载完毕～ 请查收🥰 （附：求摸摸、求零食、求贴贴！）",
     "timestamp": "创建时间: 2025-05-20 12:00:00",
     "images": [
-      "/src/assets/images/Moments/dog-01.jpg",
-      "/src/assets/images/Moments/dog-02.jpg",
-      "/src/assets/images/Moments/dog-03.jpg",
-      "/src/assets/images/Moments/dog-04.jpg",
-      "/src/assets/images/Moments/dog-05.jpg",
-      "/src/assets/images/Moments/dog-06.jpg"
+      "@/src/assets/images/Moments/dog-01.jpg",
+      "@/src/assets/images/Moments/dog-02.jpg",
+      "@/src/assets/images/Moments/dog-03.jpg",
+      "@/src/assets/images/Moments/dog-04.jpg",
+      "@/src/assets/images/Moments/dog-05.jpg",
+      "@/src/assets/images/Moments/dog-06.jpg"
     ]
   },
   {
