@@ -42,14 +42,14 @@
   import avatarImage from '@/assets/images/home/avatar.jpg'
 
   // 预加载 Moments 目录下的所有图片，生成一个「路径 -> 图片」映射
-  const rawMomentImages = import.meta.glob('../assets/images/Moments/*', {
+  const rawMomentImages = import.meta.glob('../../assets/images/Moments/*', {
     eager: true,
     import: 'default'
   })
 
   const momentsImageMap = Object.entries(rawMomentImages).reduce((acc, [key, value]) => {
-    // 将 ../assets/... 转成 /src/... 方便 JSON 里直接使用 /src 路径
-    const absoluteKey = key.replace(/^\.\.\//, '/src/')
+    // 将 ../../assets/... 转成 /src/... 方便 JSON 里直接使用 /src 路径
+    const absoluteKey = key.replace(/^(\.\.\/)+/, '/src/')
     acc[absoluteKey] = value
     // 兼容旧数据里继续使用 @/ 前缀
     acc[absoluteKey.replace(/^\/src\//, '@/')] = value
